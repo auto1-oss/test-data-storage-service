@@ -4,7 +4,7 @@
 
     <name>shift-data-provider</name>
     <groupId>com.auto1</groupId>
-    <artifactId>shift</artifactId>
+    <artifactId>shift-data-provider</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
