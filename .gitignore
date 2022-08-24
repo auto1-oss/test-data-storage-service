@@ -1,0 +1,6 @@
+*.iml
+.idea
+test-output
+target
+logs
+allure-results
