@@ -1,0 +1,203 @@
+openapi: 3.0.0
+info:
+  title: Shift data provider API
+  version: 1.0.0
+paths:
+
+  /queue/omni/count:
+    get:
+      summary: Get omnies
+      description: Get the amount of all omnies
+      operationId: getAmountOmnies
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OmniItems'
+
+  /queue/omni/{data-type}/count:
+    get:
+      summary: Get data type omnies
+      description: Get the amount of the specific data type omnies
+      operationId: getAmountDataTypeOmnies
+      parameters:
+        - in: path
+          name: data-type
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OmniItem'
+
+
+  /queue/omni/{data-type}:
+    get:
+      summary: Get omni
+      description: Get a specific omni by data type
+      operationId: getOmni
+      parameters:
+        - in: path
+          name: data-type
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+
+    post:
+      summary: Create omni
+      description: Create omni
+      operationId: createOmni
+      parameters:
+        - in: path
+          name: data-type
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Omni'
+      responses:
+        '201':
+          description: Created
+
+
+  /queue/omni/clean:
+    post:
+      summary: Clean omnies
+      description: Clean omnies by data type and created before date
+      operationId: cleanOmnies
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CleanOmni'
+      responses:
+        '204':
+          description: No Content
+
+
+  /queue/omni/search:
+    post:
+      summary: Search omni items
+      description: Search omni items
+      operationId: searchOmniItems
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchItem'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchedItems'
+
+
+  /queue/omni/purge:
+    post:
+      summary: Purge omni queue
+      description: Purge all data in omni queue
+      responses:
+        '204':
+          description: No Content
+
+
+  /queue/omni/{id}:
+    delete:
+      summary: Delete omni
+      description: Delete omni by id
+      operationId: deleteOmni
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: No Content
+
+components:
+  schemas:
+
+    OmniItem:
+      type: object
+      properties:
+        dataType:
+          type: string
+        itemCount:
+          type: integer
+          format: int64
+        owner:
+          type: string
+
+    OmniItems:
+      type: array
+      items:
+        $ref: '#/components/schemas/OmniItem'
+
+    CleanOmni:
+      type: object
+      properties:
+        createdBefore:
+          type: string
+        dataType:
+          type: string
+
+    Omni:
+      type: object
+
+    SearchItem:
+      type: object
+      properties:
+        createdBeforeDate:
+          type: string
+        dataType:
+          type: string
+        dirty:
+          type: boolean
+        updatedBeforeDate:
+          type: string
+
+    SearchedItem:
+      type: object
+      properties:
+        created:
+          type: string
+        data:
+          type: string
+        dataType:
+          type: string
+        dirty:
+          type: boolean
+        id:
+          type: integer
+          format: int64
+        updated:
+          type: string
+
+    SearchedItems:
+      type: array
+      items:
+        $ref: '#/components/schemas/SearchedItem'
