@@ -1,1 +1,0 @@
-# shift-data-provider
