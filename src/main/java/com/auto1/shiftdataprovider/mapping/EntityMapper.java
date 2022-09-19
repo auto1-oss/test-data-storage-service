@@ -1,29 +1,28 @@
 package com.auto1.shiftdataprovider.mapping;
 
+import com.auto1.shiftdataprovider.domain.OmniQueueItem;
+import com.auto1.shiftdataprovider.dto.OmniDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.io.DataInput;
 
 @Component
-public interface EntityMapper<T, DTO> {
+@RequiredArgsConstructor
+public class EntityMapper {
 
-    DTO toDTO(T entity);
+    private final ObjectMapper objectMapper;
 
-    T fromDTO(DTO dto);
-
-    T fromUpdateDTO(DTO dto);
-
-    default List<DTO> toDTOs(Collection<T> entities) {
-        return entities.stream().map(this::toDTO).collect(Collectors.toUnmodifiableList());
+    @SneakyThrows
+    public OmniDTO toOmniDTO(OmniQueueItem omniQueueItem) {
+        return objectMapper.readValue((DataInput) omniQueueItem, OmniDTO.class);
     }
 
-    default List<T> fromDTOs(Collection<DTO> dtos) {
-        return dtos.stream().map(this::fromDTO).collect(Collectors.toUnmodifiableList());
+    @SneakyThrows
+    public OmniQueueItem toOmniItem(OmniDTO omniDTO) {
+        return objectMapper.readValue((DataInput) omniDTO, OmniQueueItem.class);
     }
 
-    default List<T> fromUpdateDTO(Collection<DTO> dtos) {
-        return dtos.stream().map(this::fromUpdateDTO).collect(Collectors.toUnmodifiableList());
-    }
 }

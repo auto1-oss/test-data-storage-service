@@ -1,7 +1,7 @@
 package com.auto1.shiftdataprovider.controller;
 
-import com.auto1.shiftdataprovider.client.DataProviderApi;
-import com.auto1.shiftdataprovider.service.DataProviderService;
+import com.auto1.shiftdataprovider.client.TestDataStorageApi;
+import com.auto1.shiftdataprovider.service.TestDataStorageService;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,10 +13,10 @@ import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("v1/data-provider")
-public class DataProviderController implements DataProviderApi {
+@RequestMapping("v1/test-data-storage")
+public class TestDataStorageController implements TestDataStorageApi {
 
-    private final DataProviderService dataProviderService;
+    private final TestDataStorageService dataProviderService;
     private final Gson gson;
 
     @Override

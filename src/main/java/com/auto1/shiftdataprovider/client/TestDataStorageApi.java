@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "data-provider-service")
-public interface DataProviderApi {
+@FeignClient(name = "test-data-storage-service")
+public interface TestDataStorageApi {
 
     @ApiOperation("Create omni")
     @PostMapping(

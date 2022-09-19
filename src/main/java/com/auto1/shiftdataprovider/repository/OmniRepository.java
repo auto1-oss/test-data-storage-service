@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface OmniRepository
-        extends JpaRepository<OmniQueueItem, Long>, JpaSpecificationExecutor<OmniQueueItem> {
+public interface OmniRepository extends
+        JpaRepository<OmniQueueItem, Long>, JpaSpecificationExecutor<OmniQueueItem> {
 
     List<OmniQueueItem> findAllByDataType(String dataType);
 

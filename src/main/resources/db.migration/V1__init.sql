@@ -6,16 +6,16 @@ SET standard_conforming_strings = ON;
 SET check_function_bodies = FALSE;
 SET client_min_messages = WARNING;
 
-CREATE SCHEMA IF NOT EXISTS test_data_provider;
+CREATE SCHEMA IF NOT EXISTS test_data_storage;
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
-SET search_path = test_data_provider, pg_catalog, public;
+SET search_path = test_data_storage, pg_catalog, public;
 
 SET default_tablespace = '';
 
 SET default_with_oids = FALSE;
 
-CREATE TABLE test_data_provider.omni_queue
+CREATE TABLE test_data_storage.omni_queue
 (
     id INTEGER NOT NULL PRIMARY KEY,
     data_type TEXT,
@@ -25,13 +25,13 @@ CREATE TABLE test_data_provider.omni_queue
     updated TIMESTAMP WITHOUT TIME ZONE
 );
 
-CREATE SEQUENCE test_data_provider.omni_queue_sequence
+CREATE SEQUENCE test_data_storage.omni_queue_sequence
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE CACHE 1;
 
-CREATE TABLE test_data_provider.shedlock
+CREATE TABLE test_data_storage.shedlock
 (
     name       VARCHAR(64)  NOT NULL PRIMARY KEY,
     lock_until TIMESTAMP(3) NULL,
