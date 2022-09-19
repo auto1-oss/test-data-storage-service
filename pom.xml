@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.auto1</groupId>
-    <artifactId>shift-data-provider</artifactId>
+    <artifactId>test-data-storage</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>shift-data-provider</name>
+    <name>test-data-storage</name>
 
     <properties>
         <java.version>11</java.version>
