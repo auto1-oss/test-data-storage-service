@@ -13,7 +13,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("v1/test-data-storage")
+@RequestMapping("v1/")
 public class TestDataStorageController implements TestDataStorageApi {
 
     private final TestDataStorageService testDataStorageService;

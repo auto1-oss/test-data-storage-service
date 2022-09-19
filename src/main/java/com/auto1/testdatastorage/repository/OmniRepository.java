@@ -11,6 +11,6 @@ import java.util.List;
 public interface OmniRepository extends
         JpaRepository<OmniQueueItem, Long>, JpaSpecificationExecutor<OmniQueueItem> {
 
-    List<OmniQueueItem> findAllByDataType(String dataType);
+    OmniQueueItem findFirstByDataTypeAndDirtyOrderByIdAsc(String dataType, boolean dirty);
 
 }
