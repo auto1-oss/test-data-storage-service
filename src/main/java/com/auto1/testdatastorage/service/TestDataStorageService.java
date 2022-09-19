@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -17,8 +19,11 @@ public class TestDataStorageService {
     public void createOmni(String dataType, String omni) {
         log.info("Create omni [{}] data type", dataType);
         var omniQueueItem = OmniQueueItem.builder()
-                .dataType(dataType)
                 .data(omni)
+                .dataType(dataType)
+                .dirty(false)
+                .created(LocalDateTime.now())
+                .updated(LocalDateTime.now())
                 .build();
 
         omniRepository.save(omniQueueItem);
