@@ -1,6 +1,6 @@
-package com.auto1.shiftdataprovider.repository;
+package com.auto1.testdatastorage.repository;
 
-import com.auto1.shiftdataprovider.domain.OmniQueueItem;
+import com.auto1.testdatastorage.domain.OmniQueueItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;

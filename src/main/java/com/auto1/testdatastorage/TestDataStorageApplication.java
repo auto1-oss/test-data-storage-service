@@ -1,4 +1,4 @@
-package com.auto1.shiftdataprovider;
+package com.auto1.testdatastorage;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package com.auto1.shiftdataprovider.domain;
+package com.auto1.testdatastorage.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

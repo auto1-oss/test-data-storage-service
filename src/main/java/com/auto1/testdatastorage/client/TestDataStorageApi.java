@@ -1,4 +1,4 @@
-package com.auto1.shiftdataprovider.client;
+package com.auto1.testdatastorage.client;
 
 import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;

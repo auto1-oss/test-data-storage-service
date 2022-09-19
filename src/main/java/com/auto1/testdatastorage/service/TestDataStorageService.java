@@ -1,7 +1,7 @@
-package com.auto1.shiftdataprovider.service;
+package com.auto1.testdatastorage.service;
 
-import com.auto1.shiftdataprovider.domain.OmniQueueItem;
-import com.auto1.shiftdataprovider.repository.OmniRepository;
+import com.auto1.testdatastorage.domain.OmniQueueItem;
+import com.auto1.testdatastorage.repository.OmniRepository;
 import com.google.gson.Gson;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

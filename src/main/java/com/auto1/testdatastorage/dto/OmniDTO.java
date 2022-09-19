@@ -1,4 +1,4 @@
-package com.auto1.shiftdataprovider.dto;
+package com.auto1.testdatastorage.dto;
 
 import lombok.*;
 

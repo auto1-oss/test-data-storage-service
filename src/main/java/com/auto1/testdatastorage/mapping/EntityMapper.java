@@ -1,7 +1,7 @@
-package com.auto1.shiftdataprovider.mapping;
+package com.auto1.testdatastorage.mapping;
 
-import com.auto1.shiftdataprovider.domain.OmniQueueItem;
-import com.auto1.shiftdataprovider.dto.OmniDTO;
+import com.auto1.testdatastorage.domain.OmniQueueItem;
+import com.auto1.testdatastorage.dto.OmniDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
