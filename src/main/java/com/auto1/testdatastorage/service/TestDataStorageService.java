@@ -30,7 +30,7 @@ public class TestDataStorageService {
     }
 
     public String getOmni(String dataType) {
-        log.info("Get Omni by [{}] data type", dataType);
+        log.info("Get omni [{}] data type", dataType);
         String omni = "";
         try {
             omni = consumeOmni(dataType);
