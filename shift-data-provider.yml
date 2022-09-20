@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: Shift data provider API
+  title: Test data storage API
   version: 1.0.0
 paths:
 
