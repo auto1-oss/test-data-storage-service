@@ -20,7 +20,7 @@ CREATE TABLE test_data_storage.omni_queue
     id        INTEGER NOT NULL PRIMARY KEY,
     data_type TEXT,
     data      TEXT,
-    dirty     BOOLEAN,
+    used      BOOLEAN,
     created   TIMESTAMP WITHOUT TIME ZONE,
     updated   TIMESTAMP WITHOUT TIME ZONE
 );

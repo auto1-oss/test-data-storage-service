@@ -70,7 +70,7 @@ public class OmniQueueTest {
 
         assertThat(this.omniRepository.count(), is(1L));
 
-        OmniQueueItem omniQueueItem = this.omniRepository.findFirstByDataTypeAndDirtyOrderByIdAsc(dataType, false);
+        OmniQueueItem omniQueueItem = this.omniRepository.findFirstByDataTypeAndUsedOrderByIdAsc(dataType, false);
         assertThat(omniQueueItem.getData(), is(json));
     }
 
@@ -78,9 +78,9 @@ public class OmniQueueTest {
     public void getOmni() {
         String dataType1 = "test1";
         String dataType2 = "test2";
-        OmniQueueItem omniQueueItem1 = OmniQueueItem.builder().dataType(dataType1).data("Omni 2").dirty(false).build();
-        OmniQueueItem omniQueueItem2 = OmniQueueItem.builder().dataType(dataType2).data("Omni 3").dirty(false).build();
-        OmniQueueItem omniQueueItem3 = OmniQueueItem.builder().dataType(dataType1).data("Omni 4").dirty(false).build();
+        OmniQueueItem omniQueueItem1 = OmniQueueItem.builder().dataType(dataType1).data("Omni 2").used(false).build();
+        OmniQueueItem omniQueueItem2 = OmniQueueItem.builder().dataType(dataType2).data("Omni 3").used(false).build();
+        OmniQueueItem omniQueueItem3 = OmniQueueItem.builder().dataType(dataType1).data("Omni 4").used(false).build();
 
         this.omniRepository.saveAll(Arrays.asList(omniQueueItem1, omniQueueItem2, omniQueueItem3));
 
@@ -96,9 +96,9 @@ public class OmniQueueTest {
         //@formatter:on
 
         assertThat(this.omniRepository.count(), is(3L));
-        assertThat(this.omniRepository.countByDataTypeAndDirty(dataType1, true), is(1L));
-        assertThat(this.omniRepository.countByDataTypeAndDirty(dataType1, false), is(1L));
-        assertThat(this.omniRepository.countByDataTypeAndDirty(dataType2, false), is(1L));
+        assertThat(this.omniRepository.countByDataTypeAndUsed(dataType1, true), is(1L));
+        assertThat(this.omniRepository.countByDataTypeAndUsed(dataType1, false), is(1L));
+        assertThat(this.omniRepository.countByDataTypeAndUsed(dataType2, false), is(1L));
     }
 
     @Test
@@ -112,8 +112,8 @@ public class OmniQueueTest {
         this.omniRepository.saveAll(Arrays.asList(omniQueueItem1, omniQueueItem2, omniQueueItem3));
 
         assertThat(this.omniRepository.count(), is(3L));
-        assertThat(this.omniRepository.countByDataTypeAndDirty(dataType1, false), is(2L));
-        assertThat(this.omniRepository.countByDataTypeAndDirty(dataType2, false), is(1L));
+        assertThat(this.omniRepository.countByDataTypeAndUsed(dataType1, false), is(2L));
+        assertThat(this.omniRepository.countByDataTypeAndUsed(dataType2, false), is(1L));
 
         //@formatter:off
         given()
@@ -127,8 +127,8 @@ public class OmniQueueTest {
         //@formatter:on
 
         assertThat(this.omniRepository.count(), is(1L));
-        assertThat(this.omniRepository.countByDataTypeAndDirty(dataType1, false), is(0L));
-        assertThat(this.omniRepository.countByDataTypeAndDirty(dataType2, false), is(1L));
+        assertThat(this.omniRepository.countByDataTypeAndUsed(dataType1, false), is(0L));
+        assertThat(this.omniRepository.countByDataTypeAndUsed(dataType2, false), is(1L));
     }
 
     @Test
@@ -283,7 +283,7 @@ public class OmniQueueTest {
         this.omniRepository.saveAll(Arrays.asList(omniQueueItem1, omniQueueItem2, omniQueueItem3));
 
         OmniSearchDTO omniSearchDTO = new OmniSearchDTO();
-        omniSearchDTO.setDirty(false);
+        omniSearchDTO.setUsed(false);
         omniSearchDTO.setDataType(dataType1);
         omniSearchDTO.setUpdatedBeforeDate(LocalDateTime.now().plusDays(1));
 
@@ -309,7 +309,7 @@ public class OmniQueueTest {
         assertThat(result.size(), is(1));
         assertThat(result.get(0).getDataType(), is(omniQueueItem1.getDataType()));
         assertThat(result.get(0).getData(), is(omniQueueItem1.getData()));
-        assertThat(result.get(0).getDirty(), is(omniQueueItem1.getDirty()));
+        assertThat(result.get(0).getUsed(), is(omniQueueItem1.getUsed()));
         assertThat(result.get(0).getUpdated(), is(omniQueueItem1.getUpdated()));
     }
 
@@ -325,7 +325,7 @@ public class OmniQueueTest {
         this.omniRepository.saveAll(Arrays.asList(omniQueueItem1, omniQueueItem2, omniQueueItem3));
 
         OmniSearchDTO omniSearchDTO = new OmniSearchDTO();
-        omniSearchDTO.setDirty(true);
+        omniSearchDTO.setUsed(true);
         omniSearchDTO.setDataType(dataType1);
         omniSearchDTO.setCreatedBeforeDate(time);
 
@@ -351,7 +351,7 @@ public class OmniQueueTest {
         assertThat(result.size(), is(1));
         assertThat(result.get(0).getDataType(), is(omniQueueItem3.getDataType()));
         assertThat(result.get(0).getData(), is(omniQueueItem3.getData()));
-        assertThat(result.get(0).getDirty(), is(omniQueueItem3.getDirty()));
+        assertThat(result.get(0).getUsed(), is(omniQueueItem3.getUsed()));
         assertThat(result.get(0).getUpdated(), is(omniQueueItem3.getUpdated()));
     }
 
@@ -390,7 +390,7 @@ public class OmniQueueTest {
         //@formatter:on
         OmniSearchDTO omniSearchDTO = new OmniSearchDTO();
         omniSearchDTO.setDataType(dataType1);
-        omniSearchDTO.setDirty(true);
+        omniSearchDTO.setUsed(true);
         omniSearchDTO.setCreatedBeforeDate(time1);
 
         //@formatter:off
@@ -412,14 +412,14 @@ public class OmniQueueTest {
                         .getList("", OmniDTO.class);
         //@formatter:on
         assertThat(result.size(), is(1));
-        assertThat(result.get(0).getDirty(), is(true));
+        assertThat(result.get(0).getUsed(), is(true));
     }
 
-    private OmniQueueItem buildOmniQueueItem(String dataType, String text, boolean dirty) {
+    private OmniQueueItem buildOmniQueueItem(String dataType, String text, boolean used) {
         OmniQueueItem omniQueueItem = new OmniQueueItem();
         omniQueueItem.setDataType(dataType);
         omniQueueItem.setData(text);
-        omniQueueItem.setDirty(dirty);
+        omniQueueItem.setUsed(used);
         omniQueueItem.setCreated(LocalDateTime.now());
         return omniQueueItem;
     }

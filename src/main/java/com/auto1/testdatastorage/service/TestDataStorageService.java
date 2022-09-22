@@ -33,7 +33,7 @@ public class TestDataStorageService {
         var omniQueueItem = OmniQueueItem.builder()
                 .data(omni)
                 .dataType(dataType)
-                .dirty(false)
+                .used(false)
                 .created(LocalDateTime.now())
                 .build();
 
@@ -53,11 +53,11 @@ public class TestDataStorageService {
 
     private String consumeOmni(String dataType) throws EmptyQueueException {
         var omni = Optional
-                .ofNullable(omniRepository.findFirstByDataTypeAndDirtyOrderByIdAsc(dataType, false))
+                .ofNullable(omniRepository.findFirstByDataTypeAndUsedOrderByIdAsc(dataType, false))
                 .orElseThrow(() -> new EmptyQueueException(String.format("Empty Omni Queue for type: [%s]", dataType)));
 
         omni.setUpdated(LocalDateTime.now());
-        omni.setDirty(true);
+        omni.setUsed(true);
         omniRepository.save(omni);
         return omni.getData();
     }
@@ -76,7 +76,7 @@ public class TestDataStorageService {
         log.info("Count omni by [{}] data type", dataType);
         var omniCount = new OmniItemCountDTO();
         omniCount.setDataType(dataType);
-        omniCount.setItemCount(omniRepository.countByDataTypeAndDirty(dataType, false));
+        omniCount.setItemCount(omniRepository.countByDataTypeAndUsed(dataType, false));
         Optional.ofNullable(this.typeOwnersRepository.findByDataType(dataType)
                 .orElse(TypeOwner.builder().dataType(dataType).owner("N/A").build())
                 .getOwner()).ifPresent(omniCount::setOwner);
@@ -91,7 +91,7 @@ public class TestDataStorageService {
         for (String dataType : dataTypes) {
             OmniItemCountDTO omniCount = new OmniItemCountDTO();
             omniCount.setDataType(dataType);
-            omniCount.setItemCount(this.omniRepository.countByDataTypeAndDirty(dataType, false));
+            omniCount.setItemCount(this.omniRepository.countByDataTypeAndUsed(dataType, false));
             Optional.ofNullable(this.typeOwnersRepository.findByDataType(dataType)
                     .orElse(TypeOwner.builder().dataType(dataType).owner("N/A").build()).getOwner()).ifPresent(omniCount::setOwner);
             itemsCounts.add(omniCount);
@@ -112,13 +112,13 @@ public class TestDataStorageService {
 
     private List<OmniQueueItem> searchOmni(OmniSearchDTO searchDTO) {
         if (searchDTO.getDataType() == null || searchDTO.getDataType().isEmpty()) {
-            return omniRepository.findAllByDirtyAndUpdatedBefore(
-                    searchDTO.getDirty(), searchDTO.getUpdatedBeforeDate());
+            return omniRepository.findAllByUsedAndUpdatedBefore(
+                    searchDTO.getUsed(), searchDTO.getUpdatedBeforeDate());
         } else if (searchDTO.getCreatedBeforeDate() != null && searchDTO.getUpdatedBeforeDate() == null) {
-            return omniRepository.findAllByDataTypeAndDirtyAndCreatedBefore(searchDTO.getDataType(), searchDTO.getDirty(), searchDTO.getCreatedBeforeDate());
+            return omniRepository.findAllByDataTypeAndUsedAndCreatedBefore(searchDTO.getDataType(), searchDTO.getUsed(), searchDTO.getCreatedBeforeDate());
         } else if (searchDTO.getCreatedBeforeDate() == null && searchDTO.getUpdatedBeforeDate() != null) {
-            return omniRepository.findAllByDataTypeAndDirtyAndUpdatedBefore(
-                    searchDTO.getDataType(), searchDTO.getDirty(), searchDTO.getUpdatedBeforeDate());
+            return omniRepository.findAllByDataTypeAndUsedAndUpdatedBefore(
+                    searchDTO.getDataType(), searchDTO.getUsed(), searchDTO.getUpdatedBeforeDate());
         } else {
             log.error("Search did not return any match by [{}]", searchDTO);
             throw new NotImplementedException("Search did not return any match"); //todo check if it's needed
@@ -131,7 +131,7 @@ public class TestDataStorageService {
         if (!omniQueueItems.isEmpty()) {
             omniQueueItems.forEach(omniQueueItem -> {
                 omniQueueItem.setUpdated(LocalDateTime.now());
-                omniQueueItem.setDirty(true);
+                omniQueueItem.setUsed(true);
                 omniRepository.save(omniQueueItem);
             });
         } else {

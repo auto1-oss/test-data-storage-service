@@ -13,9 +13,9 @@ import java.util.List;
 public interface OmniRepository
         extends JpaRepository<OmniQueueItem, Long>, JpaSpecificationExecutor<OmniQueueItem> {
 
-    OmniQueueItem findFirstByDataTypeAndDirtyOrderByIdAsc(String dataType, boolean dirty);
+    OmniQueueItem findFirstByDataTypeAndUsedOrderByIdAsc(String dataType, boolean used);
 
-    Long countByDataTypeAndDirty(String dataType, boolean dirty);
+    Long countByDataTypeAndUsed(String dataType, boolean used);
 
     @Transactional
     void deleteAllByDataType(String dataType);
@@ -30,15 +30,15 @@ public interface OmniRepository
 
     @Transactional
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    List<OmniQueueItem> findAllByDirtyAndUpdatedBefore(boolean dirty, LocalDateTime before);
+    List<OmniQueueItem> findAllByUsedAndUpdatedBefore(boolean used, LocalDateTime before);
 
     @Transactional
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    List<OmniQueueItem> findAllByDataTypeAndDirtyAndCreatedBefore(String dataType, boolean dirty, LocalDateTime before);
+    List<OmniQueueItem> findAllByDataTypeAndUsedAndCreatedBefore(String dataType, boolean used, LocalDateTime before);
 
     @Transactional
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    List<OmniQueueItem> findAllByDataTypeAndDirtyAndUpdatedBefore(String dataType, boolean dirty, LocalDateTime before);
+    List<OmniQueueItem> findAllByDataTypeAndUsedAndUpdatedBefore(String dataType, boolean used, LocalDateTime before);
 
     @Transactional
     @Lock(LockModeType.PESSIMISTIC_WRITE)
