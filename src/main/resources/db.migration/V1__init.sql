@@ -17,12 +17,12 @@ SET default_with_oids = FALSE;
 
 CREATE TABLE test_data_storage.omni_queue
 (
-    id INTEGER NOT NULL PRIMARY KEY,
+    id        INTEGER NOT NULL PRIMARY KEY,
     data_type TEXT,
-    data TEXT,
-    dirty BOOLEAN,
-    created TIMESTAMP WITHOUT TIME ZONE,
-    updated TIMESTAMP WITHOUT TIME ZONE
+    data      TEXT,
+    dirty     BOOLEAN,
+    created   TIMESTAMP WITHOUT TIME ZONE,
+    updated   TIMESTAMP WITHOUT TIME ZONE
 );
 
 CREATE SEQUENCE test_data_storage.omni_queue_sequence
@@ -73,9 +73,9 @@ CREATE SEQUENCE public.hibernate_sequence
 
 CREATE TABLE test_data_storage.type_owners
 (
-    id BIGINT PRIMARY KEY,
+    id        BIGINT PRIMARY KEY,
     data_type TEXT,
-    owner VARCHAR
+    owner     VARCHAR
 );
 
 CREATE SEQUENCE test_data_storage.type_owners_sequence
@@ -84,5 +84,6 @@ CREATE SEQUENCE test_data_storage.type_owners_sequence
     NO MINVALUE
     NO MAXVALUE CACHE 1;
 
-ALTER TABLE test_data_storage.type_owners ADD CONSTRAINT constraint_type UNIQUE (data_type);
+ALTER TABLE test_data_storage.type_owners
+    ADD CONSTRAINT constraint_type UNIQUE (data_type);
 
