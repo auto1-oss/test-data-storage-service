@@ -175,7 +175,7 @@ components:
           type: string
         dataType:
           type: string
-        dirty:
+        used:
           type: boolean
         updatedBeforeDate:
           type: string
@@ -189,7 +189,7 @@ components:
           type: string
         dataType:
           type: string
-        dirty:
+        used:
           type: boolean
         id:
           type: integer

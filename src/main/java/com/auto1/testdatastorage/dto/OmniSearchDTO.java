@@ -1,0 +1,21 @@
+package com.auto1.testdatastorage.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+import java.time.LocalDateTime;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+public class OmniSearchDTO {
+
+    private LocalDateTime createdBeforeDate;
+    private Boolean used;
+    private LocalDateTime updatedBeforeDate;
+    private String dataType;
+
+}

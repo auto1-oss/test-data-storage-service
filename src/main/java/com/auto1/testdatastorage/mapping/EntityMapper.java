@@ -2,27 +2,26 @@ package com.auto1.testdatastorage.mapping;
 
 import com.auto1.testdatastorage.domain.OmniQueueItem;
 import com.auto1.testdatastorage.dto.OmniDTO;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 
-import java.io.DataInput;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.beans.BeanUtils.copyProperties;
 
 @Component
 @RequiredArgsConstructor
 public class EntityMapper {
 
-    private final ObjectMapper objectMapper;
-
-    @SneakyThrows
-    public OmniDTO toOmniDTO(OmniQueueItem omniQueueItem) {
-        return objectMapper.readValue((DataInput) omniQueueItem, OmniDTO.class);
+    public static OmniDTO toDTO(final OmniQueueItem omniQueueItem) {
+        final OmniDTO omniDTO = new OmniDTO();
+        copyProperties(omniQueueItem, omniDTO);
+        return omniDTO;
     }
 
-    @SneakyThrows
-    public OmniQueueItem toOmniItem(OmniDTO omniDTO) {
-        return objectMapper.readValue((DataInput) omniDTO, OmniQueueItem.class);
+    public static List<OmniDTO> toDTO(final List<OmniQueueItem> omniQueueItems) {
+        return omniQueueItems.parallelStream().map(EntityMapper::toDTO).collect(Collectors.toList());
     }
 
 }

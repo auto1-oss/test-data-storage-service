@@ -14,7 +14,7 @@ public class OmniDTO {
     private Long id;
     private String data;
     private String dataType;
-    private Boolean dirty;
+    private Boolean used;
     private LocalDateTime created;
     private LocalDateTime updated;
 
