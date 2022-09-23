@@ -1,7 +1,7 @@
 package com.auto1.testdatastorage.controller;
 
 import com.auto1.testdatastorage.client.TestDataStorageApi;
-import com.auto1.testdatastorage.dto.CleanOmniDTO;
+import com.auto1.testdatastorage.dto.ArchiveOmniDTO;
 import com.auto1.testdatastorage.dto.OmniDTO;
 import com.auto1.testdatastorage.dto.OmniItemCountDTO;
 import com.auto1.testdatastorage.dto.OmniSearchDTO;
@@ -69,8 +69,8 @@ public class TestDataStorageController implements TestDataStorageApi {
     }
 
     @Override
-    public void cleanOmni(CleanOmniDTO cleanOmniDTO) {
-        testDataStorageService.cleanOmni(cleanOmniDTO);
+    public void archiveOmni(ArchiveOmniDTO archiveOmniDTO) {
+        testDataStorageService.archiveOmni(archiveOmniDTO);
     }
 
 }

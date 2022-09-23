@@ -1,6 +1,6 @@
 package com.auto1.testdatastorage.client;
 
-import com.auto1.testdatastorage.dto.CleanOmniDTO;
+import com.auto1.testdatastorage.dto.ArchiveOmniDTO;
 import com.auto1.testdatastorage.dto.OmniDTO;
 import com.auto1.testdatastorage.dto.OmniItemCountDTO;
 import com.auto1.testdatastorage.dto.OmniSearchDTO;
@@ -70,10 +70,10 @@ public interface TestDataStorageApi {
     )
     List<OmniDTO> searchOmnis(@RequestBody OmniSearchDTO searchDTO);
 
-    @ApiOperation("Clean omni queue")
+    @ApiOperation("Archive omni queue")
     @PostMapping(
             value = "/queue/omni/clean",
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    void cleanOmni(@RequestBody CleanOmniDTO cleanOmniDTO);
+    void archiveOmni(@RequestBody ArchiveOmniDTO archiveOmniDTO);
 }

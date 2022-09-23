@@ -2,7 +2,7 @@ package com.auto1.testdatastorage.service;
 
 import com.auto1.testdatastorage.domain.OmniQueueItem;
 import com.auto1.testdatastorage.domain.TypeOwner;
-import com.auto1.testdatastorage.dto.CleanOmniDTO;
+import com.auto1.testdatastorage.dto.ArchiveOmniDTO;
 import com.auto1.testdatastorage.dto.OmniDTO;
 import com.auto1.testdatastorage.dto.OmniItemCountDTO;
 import com.auto1.testdatastorage.dto.OmniSearchDTO;
@@ -33,7 +33,7 @@ public class TestDataStorageService {
         var omniQueueItem = OmniQueueItem.builder()
                 .data(omni)
                 .dataType(dataType)
-                .used(false)
+                .archived(false)
                 .created(LocalDateTime.now())
                 .build();
 
@@ -53,11 +53,11 @@ public class TestDataStorageService {
 
     private String consumeOmni(String dataType) throws EmptyQueueException {
         var omni = Optional
-                .ofNullable(omniRepository.findFirstByDataTypeAndUsedOrderByIdAsc(dataType, false))
+                .ofNullable(omniRepository.findFirstByDataTypeAndArchivedOrderByIdAsc(dataType, false))
                 .orElseThrow(() -> new EmptyQueueException(String.format("Empty Omni Queue for type: [%s]", dataType)));
 
         omni.setUpdated(LocalDateTime.now());
-        omni.setUsed(true);
+        omni.setArchived(true);
         omniRepository.save(omni);
         return omni.getData();
     }
@@ -76,7 +76,7 @@ public class TestDataStorageService {
         log.info("Count omni by [{}] data type", dataType);
         var omniCount = new OmniItemCountDTO();
         omniCount.setDataType(dataType);
-        omniCount.setItemCount(omniRepository.countByDataTypeAndUsed(dataType, false));
+        omniCount.setItemCount(omniRepository.countByDataTypeAndArchived(dataType, false));
         Optional.ofNullable(this.typeOwnersRepository.findByDataType(dataType)
                 .orElse(TypeOwner.builder().dataType(dataType).owner("N/A").build())
                 .getOwner()).ifPresent(omniCount::setOwner);
@@ -91,7 +91,7 @@ public class TestDataStorageService {
         for (String dataType : dataTypes) {
             OmniItemCountDTO omniCount = new OmniItemCountDTO();
             omniCount.setDataType(dataType);
-            omniCount.setItemCount(this.omniRepository.countByDataTypeAndUsed(dataType, false));
+            omniCount.setItemCount(this.omniRepository.countByDataTypeAndArchived(dataType, false));
             Optional.ofNullable(this.typeOwnersRepository.findByDataType(dataType)
                     .orElse(TypeOwner.builder().dataType(dataType).owner("N/A").build()).getOwner()).ifPresent(omniCount::setOwner);
             itemsCounts.add(omniCount);
@@ -112,30 +112,30 @@ public class TestDataStorageService {
 
     private List<OmniQueueItem> searchOmni(OmniSearchDTO searchDTO) {
         if (searchDTO.getDataType() == null || searchDTO.getDataType().isEmpty()) {
-            return omniRepository.findAllByUsedAndUpdatedBefore(
-                    searchDTO.getUsed(), searchDTO.getUpdatedBeforeDate());
+            return omniRepository.findAllByArchivedAndUpdatedBefore(
+                    searchDTO.getArchived(), searchDTO.getUpdatedBeforeDate());
         } else if (searchDTO.getCreatedBeforeDate() != null && searchDTO.getUpdatedBeforeDate() == null) {
-            return omniRepository.findAllByDataTypeAndUsedAndCreatedBefore(searchDTO.getDataType(), searchDTO.getUsed(), searchDTO.getCreatedBeforeDate());
+            return omniRepository.findAllByDataTypeAndArchivedAndCreatedBefore(searchDTO.getDataType(), searchDTO.getArchived(), searchDTO.getCreatedBeforeDate());
         } else if (searchDTO.getCreatedBeforeDate() == null && searchDTO.getUpdatedBeforeDate() != null) {
-            return omniRepository.findAllByDataTypeAndUsedAndUpdatedBefore(
-                    searchDTO.getDataType(), searchDTO.getUsed(), searchDTO.getUpdatedBeforeDate());
+            return omniRepository.findAllByDataTypeAndArchivedAndUpdatedBefore(
+                    searchDTO.getDataType(), searchDTO.getArchived(), searchDTO.getUpdatedBeforeDate());
         } else {
             log.error("Search did not return any match by [{}]", searchDTO);
             throw new NotImplementedException("Search did not return any match"); //todo check if it's needed
         }
     }
 
-    public void cleanOmni(CleanOmniDTO cleanOmniDTO) {
-        log.info("Clean omni by [{}] data type and created before [{}]", cleanOmniDTO.getDataType(), cleanOmniDTO.getCreatedBefore());
-        var omniQueueItems = omniRepository.findAllByDataTypeAndCreatedBefore(cleanOmniDTO.getDataType(), cleanOmniDTO.getCreatedBefore());
+    public void archiveOmni(ArchiveOmniDTO archiveOmniDTO) {
+        log.info("Archive omni by [{}] data type and created before [{}]", archiveOmniDTO.getDataType(), archiveOmniDTO.getCreatedBefore());
+        var omniQueueItems = omniRepository.findAllByDataTypeAndCreatedBefore(archiveOmniDTO.getDataType(), archiveOmniDTO.getCreatedBefore());
         if (!omniQueueItems.isEmpty()) {
             omniQueueItems.forEach(omniQueueItem -> {
                 omniQueueItem.setUpdated(LocalDateTime.now());
-                omniQueueItem.setUsed(true);
+                omniQueueItem.setArchived(true);
                 omniRepository.save(omniQueueItem);
             });
         } else {
-            log.info("Return empty queue with data type [{}] and created date before [{}]", cleanOmniDTO.getDataType(), cleanOmniDTO.getCreatedBefore());
+            log.info("Return empty queue with data type [{}] and created date before [{}]", archiveOmniDTO.getDataType(), archiveOmniDTO.getCreatedBefore());
         }
     }
 }

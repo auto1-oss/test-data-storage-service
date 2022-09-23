@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class CleanOmniDTO {
+public class ArchiveOmniDTO {
 
     String dataType;
     LocalDateTime createdBefore;
