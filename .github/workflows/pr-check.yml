@@ -2,8 +2,8 @@ name: PR check test-data-storage
 
 on:
   push:
-    branches:    
-      - '!master'
+    branches-ignore:
+      - master
 
   workflow_dispatch:
 
@@ -11,6 +11,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3  
+      - uses: actions/checkout@v3
       - name: Run PR check for test-data-storage
         run: mvn test
