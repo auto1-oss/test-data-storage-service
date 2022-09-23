@@ -1,0 +1,11 @@
+name: PR check test-data-storage
+
+on:
+  push
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+      - name: Run PR check for test-data-storage
+        run: mvn test
