@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class OmniSearchDTO {
 
     private LocalDateTime createdBeforeDate;
-    private Boolean used;
+    private Boolean archived;
     private LocalDateTime updatedBeforeDate;
     private String dataType;
 

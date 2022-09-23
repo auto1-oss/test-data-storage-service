@@ -3,7 +3,7 @@ package com.auto1.testdatastorage;
 
 import com.auto1.testdatastorage.domain.OmniQueueItem;
 import com.auto1.testdatastorage.domain.TypeOwner;
-import com.auto1.testdatastorage.dto.CleanOmniDTO;
+import com.auto1.testdatastorage.dto.ArchiveOmniDTO;
 import com.auto1.testdatastorage.dto.OmniDTO;
 import com.auto1.testdatastorage.dto.OmniSearchDTO;
 import com.auto1.testdatastorage.repository.OmniRepository;
@@ -70,7 +70,7 @@ public class OmniQueueTest {
 
         assertThat(this.omniRepository.count(), is(1L));
 
-        OmniQueueItem omniQueueItem = this.omniRepository.findFirstByDataTypeAndUsedOrderByIdAsc(dataType, false);
+        OmniQueueItem omniQueueItem = this.omniRepository.findFirstByDataTypeAndArchivedOrderByIdAsc(dataType, false);
         assertThat(omniQueueItem.getData(), is(json));
     }
 
@@ -78,9 +78,9 @@ public class OmniQueueTest {
     public void getOmni() {
         String dataType1 = "test1";
         String dataType2 = "test2";
-        OmniQueueItem omniQueueItem1 = OmniQueueItem.builder().dataType(dataType1).data("Omni 2").used(false).build();
-        OmniQueueItem omniQueueItem2 = OmniQueueItem.builder().dataType(dataType2).data("Omni 3").used(false).build();
-        OmniQueueItem omniQueueItem3 = OmniQueueItem.builder().dataType(dataType1).data("Omni 4").used(false).build();
+        OmniQueueItem omniQueueItem1 = OmniQueueItem.builder().dataType(dataType1).data("Omni 2").archived(false).build();
+        OmniQueueItem omniQueueItem2 = OmniQueueItem.builder().dataType(dataType2).data("Omni 3").archived(false).build();
+        OmniQueueItem omniQueueItem3 = OmniQueueItem.builder().dataType(dataType1).data("Omni 4").archived(false).build();
 
         this.omniRepository.saveAll(Arrays.asList(omniQueueItem1, omniQueueItem2, omniQueueItem3));
 
@@ -96,9 +96,9 @@ public class OmniQueueTest {
         //@formatter:on
 
         assertThat(this.omniRepository.count(), is(3L));
-        assertThat(this.omniRepository.countByDataTypeAndUsed(dataType1, true), is(1L));
-        assertThat(this.omniRepository.countByDataTypeAndUsed(dataType1, false), is(1L));
-        assertThat(this.omniRepository.countByDataTypeAndUsed(dataType2, false), is(1L));
+        assertThat(this.omniRepository.countByDataTypeAndArchived(dataType1, true), is(1L));
+        assertThat(this.omniRepository.countByDataTypeAndArchived(dataType1, false), is(1L));
+        assertThat(this.omniRepository.countByDataTypeAndArchived(dataType2, false), is(1L));
     }
 
     @Test
@@ -112,8 +112,8 @@ public class OmniQueueTest {
         this.omniRepository.saveAll(Arrays.asList(omniQueueItem1, omniQueueItem2, omniQueueItem3));
 
         assertThat(this.omniRepository.count(), is(3L));
-        assertThat(this.omniRepository.countByDataTypeAndUsed(dataType1, false), is(2L));
-        assertThat(this.omniRepository.countByDataTypeAndUsed(dataType2, false), is(1L));
+        assertThat(this.omniRepository.countByDataTypeAndArchived(dataType1, false), is(2L));
+        assertThat(this.omniRepository.countByDataTypeAndArchived(dataType2, false), is(1L));
 
         //@formatter:off
         given()
@@ -127,8 +127,8 @@ public class OmniQueueTest {
         //@formatter:on
 
         assertThat(this.omniRepository.count(), is(1L));
-        assertThat(this.omniRepository.countByDataTypeAndUsed(dataType1, false), is(0L));
-        assertThat(this.omniRepository.countByDataTypeAndUsed(dataType2, false), is(1L));
+        assertThat(this.omniRepository.countByDataTypeAndArchived(dataType1, false), is(0L));
+        assertThat(this.omniRepository.countByDataTypeAndArchived(dataType2, false), is(1L));
     }
 
     @Test
@@ -283,7 +283,7 @@ public class OmniQueueTest {
         this.omniRepository.saveAll(Arrays.asList(omniQueueItem1, omniQueueItem2, omniQueueItem3));
 
         OmniSearchDTO omniSearchDTO = new OmniSearchDTO();
-        omniSearchDTO.setUsed(false);
+        omniSearchDTO.setArchived(false);
         omniSearchDTO.setDataType(dataType1);
         omniSearchDTO.setUpdatedBeforeDate(LocalDateTime.now().plusDays(1));
 
@@ -309,7 +309,7 @@ public class OmniQueueTest {
         assertThat(result.size(), is(1));
         assertThat(result.get(0).getDataType(), is(omniQueueItem1.getDataType()));
         assertThat(result.get(0).getData(), is(omniQueueItem1.getData()));
-        assertThat(result.get(0).getUsed(), is(omniQueueItem1.getUsed()));
+        assertThat(result.get(0).getArchived(), is(omniQueueItem1.getArchived()));
         assertThat(result.get(0).getUpdated(), is(omniQueueItem1.getUpdated()));
     }
 
@@ -325,7 +325,7 @@ public class OmniQueueTest {
         this.omniRepository.saveAll(Arrays.asList(omniQueueItem1, omniQueueItem2, omniQueueItem3));
 
         OmniSearchDTO omniSearchDTO = new OmniSearchDTO();
-        omniSearchDTO.setUsed(true);
+        omniSearchDTO.setArchived(true);
         omniSearchDTO.setDataType(dataType1);
         omniSearchDTO.setCreatedBeforeDate(time);
 
@@ -351,7 +351,7 @@ public class OmniQueueTest {
         assertThat(result.size(), is(1));
         assertThat(result.get(0).getDataType(), is(omniQueueItem3.getDataType()));
         assertThat(result.get(0).getData(), is(omniQueueItem3.getData()));
-        assertThat(result.get(0).getUsed(), is(omniQueueItem3.getUsed()));
+        assertThat(result.get(0).getArchived(), is(omniQueueItem3.getArchived()));
         assertThat(result.get(0).getUpdated(), is(omniQueueItem3.getUpdated()));
     }
 
@@ -368,9 +368,9 @@ public class OmniQueueTest {
 
         this.omniRepository.saveAll(Arrays.asList(omniQueueItem1, omniQueueItem2));
 
-        CleanOmniDTO cleanOmniDTO = new CleanOmniDTO();
-        cleanOmniDTO.setDataType(dataType1);
-        cleanOmniDTO.setCreatedBefore(time1);
+        ArchiveOmniDTO archiveOmniDTO = new ArchiveOmniDTO();
+        archiveOmniDTO.setDataType(dataType1);
+        archiveOmniDTO.setCreatedBefore(time1);
 
         //@formatter:off
         given()
@@ -378,7 +378,7 @@ public class OmniQueueTest {
                 .headers(getHeaders())
                 .baseUri(baseUrl)
                 .basePath("/queue/omni/clean")
-                .body(cleanOmniDTO)
+                .body(archiveOmniDTO)
         .when()
                 .post()
                 .prettyPeek()
@@ -390,7 +390,7 @@ public class OmniQueueTest {
         //@formatter:on
         OmniSearchDTO omniSearchDTO = new OmniSearchDTO();
         omniSearchDTO.setDataType(dataType1);
-        omniSearchDTO.setUsed(true);
+        omniSearchDTO.setArchived(true);
         omniSearchDTO.setCreatedBeforeDate(time1);
 
         //@formatter:off
@@ -412,14 +412,14 @@ public class OmniQueueTest {
                         .getList("", OmniDTO.class);
         //@formatter:on
         assertThat(result.size(), is(1));
-        assertThat(result.get(0).getUsed(), is(true));
+        assertThat(result.get(0).getArchived(), is(true));
     }
 
-    private OmniQueueItem buildOmniQueueItem(String dataType, String text, boolean used) {
+    private OmniQueueItem buildOmniQueueItem(String dataType, String text, boolean archived) {
         OmniQueueItem omniQueueItem = new OmniQueueItem();
         omniQueueItem.setDataType(dataType);
         omniQueueItem.setData(text);
-        omniQueueItem.setUsed(used);
+        omniQueueItem.setArchived(archived);
         omniQueueItem.setCreated(LocalDateTime.now());
         return omniQueueItem;
     }

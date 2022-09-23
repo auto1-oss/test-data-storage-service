@@ -22,7 +22,7 @@ public class OmniQueueItem {
     private Long id;
     private String data;
     private String dataType;
-    private Boolean used;
+    private Boolean archived;
     private LocalDateTime created;
     private LocalDateTime updated;
 
