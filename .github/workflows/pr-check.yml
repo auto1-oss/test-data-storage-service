@@ -1,9 +1,9 @@
 name: PR check test-data-storage
 
 on:
-  push:
+  pull_request:
     branches-ignore:
-      - master
+      - main
 
   workflow_dispatch:
 
