@@ -2,18 +2,11 @@
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET client_encoding = 'UTF8';
-SET standard_conforming_strings = ON;
-SET check_function_bodies = FALSE;
 SET client_min_messages = WARNING;
 
 CREATE SCHEMA IF NOT EXISTS test_data_storage;
 
-CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 SET search_path = test_data_storage, pg_catalog, public;
-
-SET default_tablespace = '';
-
-SET default_with_oids = FALSE;
 
 CREATE TABLE test_data_storage.omni_queue
 (

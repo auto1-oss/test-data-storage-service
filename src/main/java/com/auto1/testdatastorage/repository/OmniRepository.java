@@ -22,7 +22,7 @@ public interface OmniRepository
 
     @Modifying
     @Transactional
-    @Query(value = "TRUNCATE test_data_storage.omni_queue", nativeQuery = true)
+    @Query(value = "TRUNCATE TABLE test_data_storage.omni_queue", nativeQuery = true)
     void truncate();
 
     @Query(value = "SELECT DISTINCT data_type FROM test_data_storage.omni_queue ORDER BY data_type ASC", nativeQuery = true)
