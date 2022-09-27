@@ -1,0 +1,27 @@
+name: Build Test data storage Docker Image
+
+on:
+  push:
+    branches: [ "master" ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Compile and Create Maven Package
+        run: mvn -B package --file pom.xml
+
+      - name: Docker build services
+        run: docker build -t test-data-storage .
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Docker push
+        run: docker push auto1/test-data-storage-service:latest
