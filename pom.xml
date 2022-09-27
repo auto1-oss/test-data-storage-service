@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.auto1</groupId>
-    <artifactId>test-data-storage</artifactId>
+    <artifactId>test-data-storage-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>test-data-storage</name>
+    <name>test-data-storage-service</name>
 
     <properties>
         <java.version>11</java.version>
