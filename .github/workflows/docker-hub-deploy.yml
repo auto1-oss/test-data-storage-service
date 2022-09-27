@@ -25,5 +25,5 @@ jobs:
 
       - name: Docker push
         run: |
-          docker images
+          docker tag test-data-storage-service auto1/test-data-storage-service
           docker push auto1/test-data-storage-service
