@@ -24,4 +24,6 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Docker push
-        run: docker push auto1/test-data-storage-service
+        run: |
+          docker images
+          docker push auto1/test-data-storage-service
