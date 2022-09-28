@@ -12,7 +12,9 @@ docker pull auto1/test-data-storage-service:latest
 or  
 - Clone `test-data-storage-service` repository and run
 ```
-mvn -B package --file pom.xml 
+mvn -B package --file pom.xml
+```
+```
 docker build -t test-data-storage-service:latest .
 ```
 
