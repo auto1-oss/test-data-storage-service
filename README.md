@@ -3,7 +3,7 @@
 ## How to run service locally
 
 
-1. ### Create postgres DB
+1. ### Create DB
 ```
 docker run --name postgres-db -e POSTGRES_PASSWORD=docker -p 5432:5432 -d postgres
 ```
@@ -15,7 +15,7 @@ docker network inspect bridge
 Search and copy IP address without subnet mask from `postgres-db` container  
 > Example `"Name": "postgres-db"` -> `"IPv4Address": "172.17.0.2/16"` -> IP address is `172.17.0.2`  
 
-3. ### Run `test-data-storage-service`  
+3. ### Run the service
 
 In the next command instead of placeholder `IPv4Address` paste found IP address
 ```
