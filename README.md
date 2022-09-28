@@ -32,6 +32,6 @@ Search and copy IP address without subnet mask from `postgres-db` container
 
 In the next command instead of placeholder `IPv4Address` paste found IP address
 ```
-docker run --name test-data-storage -e SPRING_DATASOURCE_PASSWORD=docker -e SPRING_DATASOURCE_USERNAME=postgres -e SPRING_DATASOURCE_URL=jdbc:postgresql://{IPv4Address}:5432/postgres -p 8080:8080 -d test-data-storage-service
+docker run --name test-data-storage -e SPRING_DATASOURCE_PASSWORD=docker -e SPRING_DATASOURCE_USERNAME=postgres -e SPRING_DATASOURCE_URL=jdbc:postgresql://{IPv4Address}:5432/postgres -p 8080:8080 -d auto1/test-data-storage-service
 ```
 Now service is running on `localhost:8080`
