@@ -2,6 +2,7 @@
 
 ## How to run service locally
 
+Preinstalled apps: **Docker**
 
 1. ### Create DB
 ```
