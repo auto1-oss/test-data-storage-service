@@ -5,13 +5,13 @@
 Preinstalled apps: **Docker**
 
 1. ### Pull/build docker image
-- Pull docker image from docker hub
+- **Pull docker image from docker hub**
 ```
 docker pull auto1/test-data-storage-service:latest
 ```
 or  
-- Build docker image locally  
-Clone `test-data-storage-service` repository and run
+- **Build docker image locally**  
+Clone `test-data-storage-service` repository and run:
 ```
 mvn -B package --file pom.xml
 ```
