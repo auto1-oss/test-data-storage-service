@@ -15,7 +15,7 @@ jobs:
         run: mvn -B package --file pom.xml
 
       - name: Docker build services
-        run: mvn -B package --file pom.xml docker build -t test-data-storage-service:latest .
+        run: docker build -t test-data-storage-service:latest .
 
       - name: Login to DockerHub
         uses: docker/login-action@v2
