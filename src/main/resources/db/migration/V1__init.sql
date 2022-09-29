@@ -18,6 +18,12 @@ CREATE TABLE test_data_storage.omni_queue
     updated   TIMESTAMP WITHOUT TIME ZONE
 );
 
+CREATE INDEX idx_omni_queue_id ON test_data_storage.omni_queue (id);
+CREATE INDEX idx_omni_queue_data_type ON test_data_storage.omni_queue (data_type);
+CREATE INDEX idx_omni_queue_archived ON test_data_storage.omni_queue (archived);
+CREATE INDEX idx_omni_queue_updated ON test_data_storage.omni_queue (updated);
+CREATE INDEX idx_omni_queue_created ON test_data_storage.omni_queue (created);
+
 CREATE SEQUENCE test_data_storage.omni_queue_sequence
     START WITH 1
     INCREMENT BY 1
@@ -30,32 +36,6 @@ CREATE TABLE test_data_storage.shedlock
     lock_until TIMESTAMP(3) NULL,
     locked_at  TIMESTAMP(3) NULL,
     locked_by  VARCHAR
-);
-
--- Changelogs
-
-CREATE TABLE public.changelog
-(
-    id          INTEGER NOT NULL PRIMARY KEY,
-    action      TEXT,
-    comment_id  INTEGER,
-    created_by  BIGINT,
-    created_on  TIMESTAMP WITHOUT TIME ZONE,
-    field       TEXT,
-    new_value   TEXT,
-    object_id   UUID,
-    object_type TEXT,
-    old_value   TEXT,
-    parent_id   UUID,
-    parent_type TEXT
-);
-
-CREATE TABLE public.changelog_comments
-(
-    id         INTEGER NOT NULL PRIMARY KEY,
-    comment    TEXT,
-    created_by BIGINT,
-    created_on TIMESTAMP WITHOUT TIME ZONE
 );
 
 CREATE SEQUENCE public.hibernate_sequence
