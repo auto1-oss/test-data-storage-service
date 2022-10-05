@@ -18,7 +18,10 @@ public class Omni {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "omni_queue_sequence_generator")
-    @SequenceGenerator(name = "omni_queue_sequence_generator", sequenceName = "test_data_storage.omni_queue_sequence")
+    @SequenceGenerator(
+            name = "omni_queue_sequence_generator",
+            sequenceName = "test_data_storage.omni_queue_sequence",
+            allocationSize = 1)
     private Long id;
     private String data;
     private String dataType;
