@@ -15,6 +15,4 @@ public interface OmniTypeRepository
 
     void deleteById(Long id);
 
-    long countByDataType(String dataType);
-
 }
