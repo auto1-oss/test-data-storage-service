@@ -168,7 +168,9 @@ public class TestDataStorageService {
 
     public void deleteOmniTypeById(Long id) {
         log.info("Delete omni type by data type [{}]", id);
-        omniTypeRepository.deleteById(id);
+        if (omniTypeRepository.findById(id).isPresent()) {
+            omniTypeRepository.deleteById(id);
+        }
     }
 
     public List<OmniTypeDTO> getAllOmniTypes() {
