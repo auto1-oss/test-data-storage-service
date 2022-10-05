@@ -27,16 +27,16 @@ public class TestDataStorageService {
     private final OmniRepository omniRepository;
     private final OmniTypeRepository omniTypeRepository;
 
-    public void createOmni(String dataType, String omni) {
+    public void createOmni(String dataType, String omniData) {
         log.info("Create omni [{}] data type", dataType);
-        var omni1 = Omni.builder()
-                .data(omni)
+        var omni = Omni.builder()
+                .data(omniData)
                 .dataType(dataType)
                 .archived(false)
                 .created(LocalDateTime.now())
                 .build();
 
-        omniRepository.save(omni1);
+        omniRepository.save(omni);
     }
 
     public String getOmni(String dataType) {
