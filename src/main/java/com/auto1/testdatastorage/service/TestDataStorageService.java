@@ -1,15 +1,13 @@
 package com.auto1.testdatastorage.service;
 
-import com.auto1.testdatastorage.domain.OmniQueueItem;
-import com.auto1.testdatastorage.domain.TypeOwner;
-import com.auto1.testdatastorage.dto.ArchiveOmniDTO;
-import com.auto1.testdatastorage.dto.OmniDTO;
-import com.auto1.testdatastorage.dto.OmniItemCountDTO;
-import com.auto1.testdatastorage.dto.OmniSearchDTO;
+import com.auto1.testdatastorage.domain.Omni;
+import com.auto1.testdatastorage.domain.OmniType;
+import com.auto1.testdatastorage.dto.*;
 import com.auto1.testdatastorage.exception.EmptyQueueException;
 import com.auto1.testdatastorage.mapping.EntityMapper;
 import com.auto1.testdatastorage.repository.OmniRepository;
-import com.auto1.testdatastorage.repository.TypeOwnersRepository;
+import com.auto1.testdatastorage.repository.OmniTypeRepository;
+import com.auto1.testdatastorage.utils.ExceptionSupplier;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.NotImplementedException;
@@ -19,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -26,18 +25,18 @@ import java.util.Optional;
 public class TestDataStorageService {
 
     private final OmniRepository omniRepository;
-    private final TypeOwnersRepository typeOwnersRepository;
+    private final OmniTypeRepository omniTypeRepository;
 
     public void createOmni(String dataType, String omni) {
         log.info("Create omni [{}] data type", dataType);
-        var omniQueueItem = OmniQueueItem.builder()
+        var omni1 = Omni.builder()
                 .data(omni)
                 .dataType(dataType)
                 .archived(false)
                 .created(LocalDateTime.now())
                 .build();
 
-        omniRepository.save(omniQueueItem);
+        omniRepository.save(omni1);
     }
 
     public String getOmni(String dataType) {
@@ -77,9 +76,9 @@ public class TestDataStorageService {
         var omniCount = new OmniItemCountDTO();
         omniCount.setDataType(dataType);
         omniCount.setItemCount(omniRepository.countByDataTypeAndArchived(dataType, false));
-        Optional.ofNullable(this.typeOwnersRepository.findByDataType(dataType)
-                .orElse(TypeOwner.builder().dataType(dataType).owner("N/A").build())
-                .getOwner()).ifPresent(omniCount::setOwner);
+        Optional.ofNullable(this.omniTypeRepository.findByDataType(dataType)
+                .orElse(OmniType.builder().dataType(dataType).meta("N/A").build())
+                .getMeta()).ifPresent(omniCount::setMeta);
         return omniCount;
     }
 
@@ -92,8 +91,8 @@ public class TestDataStorageService {
             OmniItemCountDTO omniCount = new OmniItemCountDTO();
             omniCount.setDataType(dataType);
             omniCount.setItemCount(this.omniRepository.countByDataTypeAndArchived(dataType, false));
-            Optional.ofNullable(this.typeOwnersRepository.findByDataType(dataType)
-                    .orElse(TypeOwner.builder().dataType(dataType).owner("N/A").build()).getOwner()).ifPresent(omniCount::setOwner);
+            Optional.ofNullable(this.omniTypeRepository.findByDataType(dataType)
+                    .orElse(OmniType.builder().dataType(dataType).meta("N/A").build()).getMeta()).ifPresent(omniCount::setMeta);
             itemsCounts.add(omniCount);
         }
         return itemsCounts;
@@ -106,11 +105,11 @@ public class TestDataStorageService {
 
     public List<OmniDTO> searchOmnis(OmniSearchDTO searchDTO) {
         log.info("Searching omnis");
-        var omniQueueItems = searchOmni(searchDTO);
-        return EntityMapper.toDTO(omniQueueItems);
+        var omnis = searchOmni(searchDTO);
+        return EntityMapper.toOmniDTO(omnis);
     }
 
-    private List<OmniQueueItem> searchOmni(OmniSearchDTO searchDTO) {
+    private List<Omni> searchOmni(OmniSearchDTO searchDTO) {
         if (searchDTO.getDataType() == null || searchDTO.getDataType().isEmpty()) {
             return omniRepository.findAllByArchivedAndUpdatedBefore(
                     searchDTO.getArchived(), searchDTO.getUpdatedBeforeDate());
@@ -127,15 +126,56 @@ public class TestDataStorageService {
 
     public void archiveOmni(ArchiveOmniDTO archiveOmniDTO) {
         log.info("Archive omni by [{}] data type and created before [{}]", archiveOmniDTO.getDataType(), archiveOmniDTO.getCreatedBefore());
-        var omniQueueItems = omniRepository.findAllByDataTypeAndCreatedBefore(archiveOmniDTO.getDataType(), archiveOmniDTO.getCreatedBefore());
-        if (!omniQueueItems.isEmpty()) {
-            omniQueueItems.forEach(omniQueueItem -> {
-                omniQueueItem.setUpdated(LocalDateTime.now());
-                omniQueueItem.setArchived(true);
-                omniRepository.save(omniQueueItem);
+        var omnis = omniRepository.findAllByDataTypeAndCreatedBefore(archiveOmniDTO.getDataType(), archiveOmniDTO.getCreatedBefore());
+        if (!omnis.isEmpty()) {
+            omnis.forEach(omni -> {
+                omni.setUpdated(LocalDateTime.now());
+                omni.setArchived(true);
+                omniRepository.save(omni);
             });
         } else {
             log.info("Return empty queue with data type [{}] and created date before [{}]", archiveOmniDTO.getDataType(), archiveOmniDTO.getCreatedBefore());
         }
+    }
+
+    public void createOmniType(OmniTypeDTO omniTypeDTO) {
+        log.info("Create omni type [{}]", omniTypeDTO.getDataType());
+        var type = omniTypeRepository.findByDataType(omniTypeDTO.getDataType());
+        if (type.isEmpty()) {
+            var omniType = OmniType.builder()
+                    .dataType(omniTypeDTO.getDataType())
+                    .meta(omniTypeDTO.getMeta())
+                    .created(LocalDateTime.now())
+                    .build();
+            omniTypeRepository.save(omniType);
+        }
+    }
+
+    public OmniTypeDTO updateOmniTypeById(Long id, OmniTypeDTO omniTypeDTO) {
+        log.info("Update omni type id [{}]", id);
+        var omniType =
+                omniTypeRepository
+                        .findById(id)
+                        .orElseThrow(ExceptionSupplier.notFoundException("Omni type id", id.toString()));
+
+        omniType.setDataType(omniTypeDTO.getDataType());
+        omniType.setMeta(omniTypeDTO.getMeta());
+        omniType.setUpdated(LocalDateTime.now());
+
+        var updatedOmniType = omniTypeRepository.save(omniType);
+        return EntityMapper.toOmniTypeDTO(updatedOmniType);
+    }
+
+    public void deleteOmniTypeById(Long id) {
+        log.info("Delete omni type by data type [{}]", id);
+        omniTypeRepository.deleteById(id);
+    }
+
+    public List<OmniTypeDTO> getAllOmniTypes() {
+        log.info("Get all omni types");
+        var omniTypes = omniTypeRepository.findAll();
+        return omniTypes.stream()
+                .map(EntityMapper::toOmniTypeDTO)
+                .collect(Collectors.toList());
     }
 }

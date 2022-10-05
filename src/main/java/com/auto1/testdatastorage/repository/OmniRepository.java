@@ -1,6 +1,6 @@
 package com.auto1.testdatastorage.repository;
 
-import com.auto1.testdatastorage.domain.OmniQueueItem;
+import com.auto1.testdatastorage.domain.Omni;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,9 +11,9 @@ import java.util.List;
 
 @Repository
 public interface OmniRepository
-        extends JpaRepository<OmniQueueItem, Long>, JpaSpecificationExecutor<OmniQueueItem> {
+        extends JpaRepository<Omni, Long>, JpaSpecificationExecutor<Omni> {
 
-    OmniQueueItem findFirstByDataTypeAndArchivedOrderByIdAsc(String dataType, boolean archived);
+    Omni findFirstByDataTypeAndArchivedOrderByIdAsc(String dataType, boolean archived);
 
     Long countByDataTypeAndArchived(String dataType, boolean archived);
 
@@ -30,17 +30,17 @@ public interface OmniRepository
 
     @Transactional
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    List<OmniQueueItem> findAllByArchivedAndUpdatedBefore(boolean archived, LocalDateTime before);
+    List<Omni> findAllByArchivedAndUpdatedBefore(boolean archived, LocalDateTime before);
 
     @Transactional
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    List<OmniQueueItem> findAllByDataTypeAndArchivedAndCreatedBefore(String dataType, boolean archived, LocalDateTime before);
+    List<Omni> findAllByDataTypeAndArchivedAndCreatedBefore(String dataType, boolean archived, LocalDateTime before);
 
     @Transactional
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    List<OmniQueueItem> findAllByDataTypeAndArchivedAndUpdatedBefore(String dataType, boolean archived, LocalDateTime before);
+    List<Omni> findAllByDataTypeAndArchivedAndUpdatedBefore(String dataType, boolean archived, LocalDateTime before);
 
     @Transactional
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    List<OmniQueueItem> findAllByDataTypeAndCreatedBefore(String dataType, LocalDateTime before);
+    List<Omni> findAllByDataTypeAndCreatedBefore(String dataType, LocalDateTime before);
 }

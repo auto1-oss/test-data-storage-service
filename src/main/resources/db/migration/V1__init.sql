@@ -44,19 +44,21 @@ CREATE SEQUENCE public.hibernate_sequence
     NO MINVALUE
     NO MAXVALUE CACHE 1;
 
-CREATE TABLE test_data_storage.type_owners
+CREATE TABLE test_data_storage.omni_type
 (
     id        BIGINT PRIMARY KEY,
     data_type TEXT,
-    owner     VARCHAR
+    meta      TEXT,
+    created   TIMESTAMP WITHOUT TIME ZONE,
+    updated   TIMESTAMP WITHOUT TIME ZONE
 );
 
-CREATE SEQUENCE test_data_storage.type_owners_sequence
+CREATE SEQUENCE test_data_storage.omni_type_sequence
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE CACHE 1;
 
-ALTER TABLE test_data_storage.type_owners
+ALTER TABLE test_data_storage.omni_type
     ADD CONSTRAINT constraint_type UNIQUE (data_type);
 

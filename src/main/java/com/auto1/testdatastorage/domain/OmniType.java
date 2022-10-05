@@ -13,16 +13,15 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(schema = "test_data_storage", name = "omni_queue")
-public class OmniQueueItem {
+@Table(schema = "test_data_storage", name = "omni_type")
+public class OmniType {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "omni_queue_sequence_generator")
-    @SequenceGenerator(name = "omni_queue_sequence_generator", sequenceName = "test_data_storage.omni_queue_sequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "omni_type_sequence_generator")
+    @SequenceGenerator(name = "omni_type_sequence_generator", sequenceName = "test_data_storage.omni_type_sequence")
     private Long id;
-    private String data;
     private String dataType;
-    private Boolean archived;
+    private String meta;
     private LocalDateTime created;
     private LocalDateTime updated;
 
