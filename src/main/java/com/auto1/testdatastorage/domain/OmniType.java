@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class OmniType {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "omni_type_sequence_generator")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "omni_type_sequence_generator")
     @SequenceGenerator(name = "omni_type_sequence_generator", sequenceName = "test_data_storage.omni_type_sequence")
     private Long id;
     private String dataType;

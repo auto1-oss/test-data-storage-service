@@ -17,6 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -161,7 +162,7 @@ public class OmniTypeTest {
         //@formatter:on
 
         assertThat(this.omniTypeRepository.count(), is(1L));
-        assertThat(this.omniTypeRepository.countByDataType(dataType1), is(0L));
+        assertThat(this.omniTypeRepository.findById(omniTypeId), is(Optional.empty()));
     }
 
     @Test
