@@ -81,6 +81,7 @@ public class TestDataStorageController implements TestDataStorageApi {
         return testDataStorageService.updateOmniTypeById(id, omniTypeDTO);
     }
 
+    @Override
     public void deleteOmniTypeById(Long id) {
         testDataStorageService.deleteOmniTypeById(id);
     }
