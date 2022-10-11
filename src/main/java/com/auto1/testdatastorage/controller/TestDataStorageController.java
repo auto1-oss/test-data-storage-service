@@ -40,13 +40,7 @@ public class TestDataStorageController implements TestDataStorageApi {
     }
 
     @Override
-    @ResponseStatus(OK)
-    public void purgeAllData() {
-        testDataStorageService.purgeAllData();
-    }
-
-    @Override
-    public OmniItemCountDTO countOmniTypeItems(String dataType) {
+    public OmniItemCountDTO countOmniByDataType(String dataType) {
         return testDataStorageService.countOmniByDataType(dataType);
     }
 

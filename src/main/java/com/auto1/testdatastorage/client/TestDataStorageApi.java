@@ -32,19 +32,12 @@ public interface TestDataStorageApi {
     )
     void purgeAllByDataType(@PathVariable("data-type") String dataType);
 
-    @ApiOperation("Purge all data")
-    @PostMapping(
-            value = "/queue/omni/purge",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    void purgeAllData();
-
     @ApiOperation("Count omni by data type")
     @GetMapping(
             value = "/queue/omni/{data-type}/count",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    OmniItemCountDTO countOmniTypeItems(@PathVariable("data-type") String dataType);
+    OmniItemCountDTO countOmniByDataType(@PathVariable("data-type") String dataType);
 
     @ApiOperation("Count all omni")
     @GetMapping(

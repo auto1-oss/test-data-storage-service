@@ -10,16 +10,15 @@ SET search_path = test_data_storage, pg_catalog, public;
 
 CREATE TABLE test_data_storage.omni_queue
 (
-    id        INTEGER NOT NULL PRIMARY KEY,
-    data_type TEXT,
-    data      TEXT,
-    archived  BOOLEAN,
-    created   TIMESTAMP WITHOUT TIME ZONE,
-    updated   TIMESTAMP WITHOUT TIME ZONE
+    id           BIGINT NOT NULL PRIMARY KEY,
+    omni_type_id BIGINT,
+    data         TEXT,
+    archived     BOOLEAN,
+    created      TIMESTAMP WITHOUT TIME ZONE,
+    updated      TIMESTAMP WITHOUT TIME ZONE
 );
 
 CREATE INDEX idx_omni_queue_id ON test_data_storage.omni_queue (id);
-CREATE INDEX idx_omni_queue_data_type ON test_data_storage.omni_queue (data_type);
 CREATE INDEX idx_omni_queue_archived ON test_data_storage.omni_queue (archived);
 CREATE INDEX idx_omni_queue_updated ON test_data_storage.omni_queue (updated);
 CREATE INDEX idx_omni_queue_created ON test_data_storage.omni_queue (created);

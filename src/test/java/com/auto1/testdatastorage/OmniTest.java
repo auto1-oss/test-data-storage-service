@@ -1,7 +1,6 @@
 package com.auto1.testdatastorage;
 
 
-import com.auto1.testdatastorage.domain.Omni;
 import com.auto1.testdatastorage.domain.OmniType;
 import com.auto1.testdatastorage.dto.ArchiveOmniDTO;
 import com.auto1.testdatastorage.dto.OmniDTO;
@@ -20,7 +19,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -40,22 +38,30 @@ public class OmniTest {
     @Value("http://localhost:${local.server.port}/v1")
     private String baseUrl;
 
+    private final String dataType1 = "data type 1";
+    private final String dataType2 = "data type 2";
+    private final OmniType omniType1 = TestUtils.buildOmniTypeItem(dataType1);
+    private final OmniType omniType2 = TestUtils.buildOmniTypeItem(dataType2);
+
     @BeforeEach
     public void setup() {
         this.omniRepository.deleteAll();
         this.omniTypeRepository.deleteAll();
+        this.omniTypeRepository.save(omniType1);
+        this.omniTypeRepository.save(omniType2);
     }
 
     @Test
     public void createOmni() {
-        String dataType = "test";
-        String json = "{\"omni\":\"test value\"}";
+        var omni1 = TestUtils.buildOmniItem(omniType1, "Omni 1", false);
 
         //@formatter:off
         given()
+                .config(TestUtils.getConfig())
+                .headers(TestUtils.getHeaders())
                 .baseUri(baseUrl)
-                .basePath(String.format("/queue/omni/%s", dataType))
-                .body(json)
+                .basePath(String.format("/queue/omni/%s", dataType1))
+                .body(omni1)
         .when()
                 .post()
                 .prettyPeek()
@@ -65,17 +71,15 @@ public class OmniTest {
 
         assertThat(this.omniRepository.count(), is(1L));
 
-        Omni omni = this.omniRepository.findFirstByDataTypeAndArchivedOrderByIdAsc(dataType, false);
-        assertThat(omni.getData(), is(json));
+        var omni = this.omniRepository.findFirstByOmniTypeAndArchivedOrderByIdAsc(omniType1, false);
+        assertThat(omni.isPresent(), is(true));
     }
 
     @Test
     public void getOmni() {
-        String dataType1 = "test1";
-        String dataType2 = "test2";
-        Omni omni1 = Omni.builder().dataType(dataType1).data("Omni 2").archived(false).build();
-        Omni omni2 = Omni.builder().dataType(dataType2).data("Omni 3").archived(false).build();
-        Omni omni3 = Omni.builder().dataType(dataType1).data("Omni 4").archived(false).build();
+        var omni1 = TestUtils.buildOmniItem(omniType1, "Omni 2", false);
+        var omni2 = TestUtils.buildOmniItem(omniType2, "Omni 3", false);
+        var omni3 = TestUtils.buildOmniItem(omniType1, "Omni 4", false);
 
         this.omniRepository.saveAll(Arrays.asList(omni1, omni2, omni3));
 
@@ -91,24 +95,22 @@ public class OmniTest {
         //@formatter:on
 
         assertThat(this.omniRepository.count(), is(3L));
-        assertThat(this.omniRepository.countByDataTypeAndArchived(dataType1, true), is(1L));
-        assertThat(this.omniRepository.countByDataTypeAndArchived(dataType1, false), is(1L));
-        assertThat(this.omniRepository.countByDataTypeAndArchived(dataType2, false), is(1L));
+        assertThat(this.omniRepository.countByOmniTypeAndArchived(omniType1, true), is(1L));
+        assertThat(this.omniRepository.countByOmniTypeAndArchived(omniType1, false), is(1L));
+        assertThat(this.omniRepository.countByOmniTypeAndArchived(omniType2, false), is(1L));
     }
 
     @Test
     public void deleteOmniByDataType() {
-        String dataType1 = "test1";
-        String dataType2 = "test2";
-        Omni omni1 = TestUtils.buildOmniItems(dataType1, "Omni 2", false);
-        Omni omni2 = TestUtils.buildOmniItems(dataType2, "Omni 3", false);
-        Omni omni3 = TestUtils.buildOmniItems(dataType1, "Omni 4", false);
+        var omni1 = TestUtils.buildOmniItem(omniType1, "Omni 2", false);
+        var omni2 = TestUtils.buildOmniItem(omniType2, "Omni 3", false);
+        var omni3 = TestUtils.buildOmniItem(omniType1, "Omni 4", false);
 
         this.omniRepository.saveAll(Arrays.asList(omni1, omni2, omni3));
 
         assertThat(this.omniRepository.count(), is(3L));
-        assertThat(this.omniRepository.countByDataTypeAndArchived(dataType1, false), is(2L));
-        assertThat(this.omniRepository.countByDataTypeAndArchived(dataType2, false), is(1L));
+        assertThat(this.omniRepository.countByOmniTypeAndArchived(omniType1, false), is(2L));
+        assertThat(this.omniRepository.countByOmniTypeAndArchived(omniType2, false), is(1L));
 
         //@formatter:off
         given()
@@ -122,41 +124,15 @@ public class OmniTest {
         //@formatter:on
 
         assertThat(this.omniRepository.count(), is(1L));
-        assertThat(this.omniRepository.countByDataTypeAndArchived(dataType1, false), is(0L));
-        assertThat(this.omniRepository.countByDataTypeAndArchived(dataType2, false), is(1L));
-    }
-
-    @Test
-    public void purgeOmni() {
-        String dataType1 = "test1";
-        String dataType2 = "test2";
-        Omni omni1 = TestUtils.buildOmniItems(dataType1, "Omni 2", false);
-        Omni omni2 = TestUtils.buildOmniItems(dataType2, "Omni 3", false);
-        Omni omni3 = TestUtils.buildOmniItems(dataType1, "Omni 4", false);
-
-        this.omniRepository.saveAll(Arrays.asList(omni1, omni2, omni3));
-
-        //@formatter:off
-        given()
-                .baseUri(baseUrl)
-                .basePath("/queue/omni/purge")
-        .when()
-                .post()
-                .prettyPeek()
-        .then()
-                .statusCode(200);
-        //@formatter:on
-
-        assertThat(this.omniRepository.count(), is(0L));
+        assertThat(this.omniRepository.countByOmniTypeAndArchived(omniType1, false), is(0L));
+        assertThat(this.omniRepository.countByOmniTypeAndArchived(omniType2, false), is(1L));
     }
 
     @Test
     public void countOmni() {
-        String dataType1 = "test1";
-        String dataType2 = "test2";
-        Omni omni1 = TestUtils.buildOmniItems(dataType1, "Omni 2", false);
-        Omni omni2 = TestUtils.buildOmniItems(dataType2, "Omni 3", false);
-        Omni omni3 = TestUtils.buildOmniItems(dataType1, "Omni 4", false);
+        var omni1 = TestUtils.buildOmniItem(omniType1, "Omni 2", false);
+        var omni2 = TestUtils.buildOmniItem(omniType2, "Omni 3", false);
+        var omni3 = TestUtils.buildOmniItem(omniType1, "Omni 4", false);
 
         //@formatter:off
         given()
@@ -200,44 +176,41 @@ public class OmniTest {
 
     @Test
     public void countOmnis() {
-        String dataType1 = "test1";
-        String meta = "meta data";
-        String dataType2 = "test2";
-        Omni omni1 = TestUtils.buildOmniItems(dataType1, "Omni 2", false);
-        Omni omni2 = TestUtils.buildOmniItems(dataType2, "Omni 3", false);
-        Omni omni3 = TestUtils.buildOmniItems(dataType1, "Omni 4", false);
-
-        OmniType entry1 = TestUtils.buildMetaEntry(dataType1, meta);
-        OmniType entry2 = TestUtils.buildMetaEntry(dataType2, null);
-
-        omniTypeRepository.saveAll(Arrays.asList(entry1, entry2));
+        var omni1 = TestUtils.buildOmniItem(omniType1, "Omni 1", false);
+        var omni2 = TestUtils.buildOmniItem(omniType2, "Omni 2", false);
+        var omni3 = TestUtils.buildOmniItem(omniType1, "Omni 3", false);
 
         //@formatter:off
         given()
                 .baseUri(baseUrl)
                 .basePath("/queue/omni/count")
-                .when()
+        .when()
                 .get()
                 .prettyPeek()
-                .then()
+        .then()
                 .statusCode(200)
-                .body(is("[]"));
+                .body("[0].dataType", is(dataType1))
+                .body("[0].itemCount", is(0))
+                .body("[0].meta", is(nullValue()))
+                .body("[1].dataType", is(dataType2))
+                .body("[1].itemCount", is(0))
+                .body("[1].meta", is(nullValue()));
         //@formatter:on
 
-        omniRepository.saveAll(Arrays.asList(omni1, omni2, omni3));
+        this.omniRepository.saveAll(Arrays.asList(omni1, omni2, omni3));
 
         //@formatter:off
         given()
                 .baseUri(baseUrl)
                 .basePath("/queue/omni/count")
-                .when()
+        .when()
                 .get()
                 .prettyPeek()
-                .then()
+        .then()
                 .statusCode(200)
                 .body("[0].dataType", is(dataType1))
                 .body("[0].itemCount", is(2))
-                .body("[0].meta", is(meta))
+                .body("[0].meta", is(nullValue()))
                 .body("[1].dataType", is(dataType2))
                 .body("[1].itemCount", is(1))
                 .body("[1].meta", is(nullValue()));
@@ -245,11 +218,27 @@ public class OmniTest {
     }
 
     @Test
-    public void deleteOmni() {
-        String dataType1 = "test1";
-        Omni omni1 = TestUtils.buildOmniItems(dataType1, "Omni 1", false);
+    public void countOmnisWhenQueueIsEmpty() {
+        this.omniTypeRepository.deleteAll();
 
-        long id = this.omniRepository.save(omni1).getId();
+        //@formatter:off
+        given()
+                .baseUri(baseUrl)
+                .basePath("/queue/omni/count")
+        .when()
+                .get()
+                .prettyPeek()
+        .then()
+                .statusCode(200)
+                .body(is("[]"));
+        //@formatter:on
+    }
+
+    @Test
+    public void deleteOmni() {
+        var omni1 = TestUtils.buildOmniItem(omniType1, "Omni 1", false);
+
+        var id = this.omniRepository.save(omni1).getId();
 
         //@formatter:off
         given()
@@ -267,28 +256,26 @@ public class OmniTest {
 
     @Test
     public void searchOmnis() {
-        String dataType1 = "test1";
-        String dataType2 = "test2";
-        Omni omni1 = TestUtils.buildOmniItems(dataType1, "Omni 2", false);
-        Omni omni2 = TestUtils.buildOmniItems(dataType2, "Omni 3", false);
-        Omni omni3 = TestUtils.buildOmniItems(dataType1, "Omni 4", false);
+        var omni1 = TestUtils.buildOmniItem(omniType1, "Omni 1", false);
+        var omni2 = TestUtils.buildOmniItem(omniType2, "Omni 2", false);
+        var omni3 = TestUtils.buildOmniItem(omniType1, "Omni 3", false);
 
         omni1.setUpdated(LocalDateTime.now());
 
         this.omniRepository.saveAll(Arrays.asList(omni1, omni2, omni3));
 
-        OmniSearchDTO omniSearchDTO = new OmniSearchDTO();
+        var omniSearchDTO = new OmniSearchDTO();
         omniSearchDTO.setArchived(false);
         omniSearchDTO.setDataType(dataType1);
         omniSearchDTO.setUpdatedBeforeDate(LocalDateTime.now().plusDays(1));
 
         //@formatter:off
-        List<OmniDTO> result =
+        var result =
                 given()
                         .config(TestUtils.getConfig())
                         .headers(TestUtils.getHeaders())
                         .baseUri(baseUrl)
-                        .basePath("/queue/omni/search/")
+                        .basePath("/queue/omni/search")
                         .body(omniSearchDTO)
                 .when()
                         .post()
@@ -302,7 +289,6 @@ public class OmniTest {
 //        @formatter:on
 
         assertThat(result.size(), is(1));
-        assertThat(result.get(0).getDataType(), is(omni1.getDataType()));
         assertThat(result.get(0).getData(), is(omni1.getData()));
         assertThat(result.get(0).getArchived(), is(omni1.getArchived()));
         assertThat(result.get(0).getUpdated(), is(omni1.getUpdated()));
@@ -310,12 +296,10 @@ public class OmniTest {
 
     @Test
     public void searchOmnisCreatedOn() {
-        String dataType1 = "test1";
-        String dataType2 = "test2";
-        LocalDateTime time = LocalDateTime.now().plusMinutes(1);
-        Omni omni1 = TestUtils.buildOmniItems(dataType1, "Omni 2", false);
-        Omni omni2 = TestUtils.buildOmniItems(dataType2, "Omni 3", false);
-        Omni omni3 = TestUtils.buildOmniItems(dataType1, "Omni 4", true);
+        var time = LocalDateTime.now().plusMinutes(1);
+        var omni1 = TestUtils.buildOmniItem(omniType1, "Omni 2", false);
+        var omni2 = TestUtils.buildOmniItem(omniType2, "Omni 3", false);
+        var omni3 = TestUtils.buildOmniItem(omniType1, "Omni 4", true);
 
         this.omniRepository.saveAll(Arrays.asList(omni1, omni2, omni3));
 
@@ -325,7 +309,7 @@ public class OmniTest {
         omniSearchDTO.setCreatedBeforeDate(time);
 
         //@formatter:off
-        List<OmniDTO> result =
+        var result =
                 given()
                         .config(TestUtils.getConfig())
                         .headers(TestUtils.getHeaders())
@@ -344,7 +328,6 @@ public class OmniTest {
         //@formatter:on
 
         assertThat(result.size(), is(1));
-        assertThat(result.get(0).getDataType(), is(omni3.getDataType()));
         assertThat(result.get(0).getData(), is(omni3.getData()));
         assertThat(result.get(0).getArchived(), is(omni3.getArchived()));
         assertThat(result.get(0).getUpdated(), is(omni3.getUpdated()));
@@ -352,13 +335,12 @@ public class OmniTest {
 
     @Test
     public void cleanOmnisTest() {
-        String dataType1 = "CleanOmni1";
-        LocalDateTime time1 = LocalDateTime.now().plusMinutes(1);
-        LocalDateTime time2 = LocalDateTime.now().plusMinutes(3);
+        var time1 = LocalDateTime.now().plusMinutes(1);
+        var time2 = LocalDateTime.now().plusMinutes(3);
 
-        Omni omni1 = TestUtils.buildOmniItems(dataType1, "Omni 1", false);
+        var omni1 = TestUtils.buildOmniItem(omniType1, "Omni 1", false);
 
-        Omni omni2 = TestUtils.buildOmniItems(dataType1, "Omni 2", false);
+        var omni2 = TestUtils.buildOmniItem(omniType1, "Omni 2", false);
         omni2.setCreated(time2);
 
         this.omniRepository.saveAll(Arrays.asList(omni1, omni2));
@@ -389,7 +371,7 @@ public class OmniTest {
         omniSearchDTO.setCreatedBeforeDate(time1);
 
         //@formatter:off
-        List<OmniDTO> result =
+        var result =
                 given()
                         .config(TestUtils.getConfig())
                         .headers(TestUtils.getHeaders())

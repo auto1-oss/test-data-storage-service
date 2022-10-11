@@ -16,16 +16,16 @@ import static io.restassured.config.EncoderConfig.encoderConfig;
 @UtilityClass
 public class TestUtils {
 
-    public Omni buildOmniItems(String dataType, String text, boolean archived) {
+    public Omni buildOmniItem(OmniType omniType, String text, boolean archived) {
         Omni omni = new Omni();
-        omni.setDataType(dataType);
+        omni.setOmniType(omniType);
         omni.setData(text);
         omni.setArchived(archived);
         omni.setCreated(LocalDateTime.now());
         return omni;
     }
 
-    public OmniType buildOmniTypeItems(String dataType, String meta) {
+    public OmniType buildOmniTypeItem(String dataType, String meta) {
         OmniType omni = new OmniType();
         omni.setDataType(dataType);
         omni.setMeta(meta);
@@ -33,11 +33,11 @@ public class TestUtils {
         return omni;
     }
 
-    public OmniType buildMetaEntry(String dataType, String meta) {
-        OmniType entry = new OmniType();
-        entry.setDataType(dataType);
-        entry.setMeta(meta);
-        return entry;
+    public OmniType buildOmniTypeItem(String dataType) {
+        OmniType omni = new OmniType();
+        omni.setDataType(dataType);
+        omni.setCreated(LocalDateTime.now());
+        return omni;
     }
 
     public RestAssuredConfig getConfig() {

@@ -24,7 +24,11 @@ public class Omni {
             allocationSize = 1)
     private Long id;
     private String data;
-    private String dataType;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "omni_type_id")
+    private OmniType omniType;
+
     private Boolean archived;
     private LocalDateTime created;
     private LocalDateTime updated;

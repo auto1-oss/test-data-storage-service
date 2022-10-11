@@ -54,10 +54,10 @@ public class OmniTypeTest {
                 .baseUri(baseUrl)
                 .basePath("/queue/omni-type")
                 .body(omniType)
-                .when()
+        .when()
                 .post()
                 .prettyPeek()
-                .then()
+        .then()
                 .statusCode(201);
         //@formatter:on
 
@@ -92,10 +92,10 @@ public class OmniTypeTest {
                         .baseUri(baseUrl)
                         .basePath(String.format("/queue/omni-type/%s", omni.getId()))
                         .body(omniTypeDTO)
-                        .when()
+                .when()
                         .put()
                         .prettyPeek()
-                        .then()
+                .then()
                         .statusCode(200)
                         .extract()
                         .body()
@@ -127,10 +127,10 @@ public class OmniTypeTest {
                 .baseUri(baseUrl)
                 .basePath(String.format("/queue/omni-type/%s", id))
                 .body(omniTypeDTO)
-                .when()
+        .when()
                 .put()
                 .prettyPeek()
-                .then()
+        .then()
                 .statusCode(404);
         //@formatter:on
 
@@ -141,8 +141,8 @@ public class OmniTypeTest {
     public void deleteOmniTypeById() {
         String dataType1 = "data type 1";
         String dataType2 = "data type 2";
-        OmniType omniType1 = TestUtils.buildOmniTypeItems(dataType1, "omni type 1");
-        OmniType omniType2 = TestUtils.buildOmniTypeItems(dataType2, "omni type 2");
+        OmniType omniType1 = TestUtils.buildOmniTypeItem(dataType1, "omni type 1");
+        OmniType omniType2 = TestUtils.buildOmniTypeItem(dataType2, "omni type 2");
 
         this.omniTypeRepository.saveAll(Arrays.asList(omniType1, omniType2));
 
@@ -154,10 +154,10 @@ public class OmniTypeTest {
         given()
                 .baseUri(baseUrl)
                 .basePath(String.format("/queue/omni-type/%s", omniTypeId))
-                .when()
+        .when()
                 .delete()
                 .prettyPeek()
-                .then()
+        .then()
                 .statusCode(200);
         //@formatter:on
 
@@ -169,8 +169,8 @@ public class OmniTypeTest {
     public void getAllOmniTypes() {
         String dataType1 = "data type 1";
         String dataType2 = "data type 2";
-        OmniType omniType1 = TestUtils.buildOmniTypeItems(dataType1, "omni type 1");
-        OmniType omniType2 = TestUtils.buildOmniTypeItems(dataType2, "omni type 2");
+        OmniType omniType1 = TestUtils.buildOmniTypeItem(dataType1, "omni type 1");
+        OmniType omniType2 = TestUtils.buildOmniTypeItem(dataType2, "omni type 2");
 
         this.omniTypeRepository.saveAll(Arrays.asList(omniType1, omniType2));
 
@@ -181,10 +181,10 @@ public class OmniTypeTest {
                 given()
                         .baseUri(baseUrl)
                         .basePath("/queue/omni-types")
-                        .when()
+                .when()
                         .get()
                         .prettyPeek()
-                        .then()
+                .then()
                         .statusCode(200)
                         .extract()
                         .body()
