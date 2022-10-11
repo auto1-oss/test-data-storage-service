@@ -23,8 +23,8 @@ public class TestDataStorageController implements TestDataStorageApi {
 
     @Override
     @ResponseStatus(CREATED)
-    public void createOmni(String dataType, String omniData) {
-        testDataStorageService.createOmni(dataType, omniData);
+    public void createOmni(String dataType, String data) {
+        testDataStorageService.createOmni(dataType, data);
     }
 
     @Override

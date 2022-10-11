@@ -16,7 +16,7 @@ public interface TestDataStorageApi {
             value = "/queue/omni/{data-type}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    void createOmni(@PathVariable("data-type") String dataType, @RequestBody String omniData);
+    void createOmni(@PathVariable("data-type") String dataType, @RequestBody String data);
 
     @ApiOperation("Get omni")
     @GetMapping(

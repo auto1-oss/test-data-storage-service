@@ -26,11 +26,11 @@ public class TestDataStorageService {
     private final OmniRepository omniRepository;
     private final OmniTypeRepository omniTypeRepository;
 
-    public void createOmni(String dataType, String omniData) {
+    public void createOmni(String dataType, String data) {
         log.info("Create omni [{}] data type", dataType);
         var omniType = getOmniTypeIfExists(dataType);
         var omni = Omni.builder()
-                .data(omniData)
+                .data(data)
                 .omniType(omniType)
                 .archived(false)
                 .created(LocalDateTime.now())
