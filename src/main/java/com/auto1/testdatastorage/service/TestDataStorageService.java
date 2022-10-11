@@ -175,6 +175,6 @@ public class TestDataStorageService {
     private OmniType getOmniTypeIfExists(String dataType) {
         return omniTypeRepository
                 .findByDataType(dataType)
-                .orElseThrow(ExceptionSupplier.notFoundException("Omni data type", dataType));
+                .orElseThrow(ExceptionSupplier.notFoundException("Omni type", dataType));
     }
 }

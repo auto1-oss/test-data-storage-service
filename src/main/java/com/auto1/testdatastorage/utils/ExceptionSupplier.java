@@ -13,8 +13,8 @@ public class ExceptionSupplier {
         return () -> new NotFoundException(String.format("%s [%s] not found", entity, key));
     }
 
-    public Supplier<EmptyQueueException> emptyQueueException(String key) {
-        return () -> new EmptyQueueException(String.format("Omni Queue [%s] is empty ", key));
+    public Supplier<EmptyQueueException> emptyQueueException(String omniType) {
+        return () -> new EmptyQueueException(String.format("Queue with [%s] omni type is empty ", omniType));
     }
 
 }
