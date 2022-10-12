@@ -11,10 +11,10 @@ import java.time.LocalDateTime;
 @Builder
 public class OmniTypeDTO {
 
-    Long id;
-    String dataType;
-    String meta;
-    LocalDateTime created;
-    LocalDateTime updated;
+    private Long id;
+    private String dataType;
+    private String meta;
+    private LocalDateTime created;
+    private LocalDateTime updated;
 
 }

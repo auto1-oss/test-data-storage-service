@@ -4,7 +4,7 @@ import com.auto1.testdatastorage.domain.Omni;
 import com.auto1.testdatastorage.domain.OmniType;
 import com.auto1.testdatastorage.dto.OmniDTO;
 import com.auto1.testdatastorage.dto.OmniTypeDTO;
-import lombok.RequiredArgsConstructor;
+import lombok.experimental.UtilityClass;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import static org.springframework.beans.BeanUtils.copyProperties;
 
 @Component
-@RequiredArgsConstructor
+@UtilityClass
 public class EntityMapper {
 
     public static OmniDTO toOmniDTO(final Omni omni) {
