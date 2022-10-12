@@ -16,12 +16,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @AllArgsConstructor
-public class TestDataStorageService {
+public class OmniQueueService {
 
     private final OmniRepository omniRepository;
     private final OmniTypeRepository omniTypeRepository;
@@ -127,49 +126,6 @@ public class TestDataStorageService {
         } else {
             log.info("Return empty queue with data type [{}] and created date before [{}]", archiveOmniDTO.getDataType(), archiveOmniDTO.getCreatedBefore());
         }
-    }
-
-    public void createOmniType(OmniTypeDTO omniTypeDTO) {
-        log.info("Create omni type [{}]", omniTypeDTO.getDataType());
-        var type = omniTypeRepository.findByDataType(omniTypeDTO.getDataType());
-        if (type.isEmpty()) {
-            var omniType = OmniType.builder()
-                    .dataType(omniTypeDTO.getDataType())
-                    .meta(omniTypeDTO.getMeta())
-                    .created(LocalDateTime.now())
-                    .build();
-            omniTypeRepository.save(omniType);
-        }
-    }
-
-    public OmniTypeDTO updateOmniTypeById(Long id, OmniTypeDTO omniTypeDTO) {
-        log.info("Update omni type id [{}]", id);
-        var omniType = omniTypeRepository
-                .findById(id)
-                .orElseThrow(ExceptionSupplier.notFoundException("Omni type id", id.toString()));
-
-        omniType.setDataType(omniTypeDTO.getDataType());
-        omniType.setMeta(omniTypeDTO.getMeta());
-        omniType.setUpdated(LocalDateTime.now());
-
-        var updatedOmniType = omniTypeRepository.save(omniType);
-        return EntityMapper.toOmniTypeDTO(updatedOmniType);
-    }
-
-    public void deleteOmniTypeById(Long id) {
-        log.info("Delete omni type by data type [{}]", id);
-        Optional.of(id)
-                .filter(omniTypeRepository::existsById)
-                .ifPresent(omniTypeRepository::deleteById);
-        log.trace("Successfully deleted omni data type [{}]", id);
-    }
-
-    public List<OmniTypeDTO> getAllOmniTypes() {
-        log.info("Get all omni types");
-        var omniTypes = omniTypeRepository.findAll();
-        return omniTypes.stream()
-                .map(EntityMapper::toOmniTypeDTO)
-                .collect(Collectors.toList());
     }
 
     private OmniType getOmniTypeIfExists(String dataType) {

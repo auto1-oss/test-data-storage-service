@@ -91,7 +91,7 @@
         </dependency>
 
 
-        <dependency> <!-- todo remove it. used only for NotImplementedException in TestDataStorageService -->
+        <dependency> <!-- todo remove it. used only for NotImplementedException in OmniQueueService -->
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
             <version>2.6</version>
