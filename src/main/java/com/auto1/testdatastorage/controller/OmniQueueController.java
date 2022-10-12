@@ -1,9 +1,11 @@
 package com.auto1.testdatastorage.controller;
 
-import com.auto1.testdatastorage.client.TestDataStorageApi;
-import com.auto1.testdatastorage.dto.*;
+import com.auto1.testdatastorage.client.OmniQueueApi;
+import com.auto1.testdatastorage.dto.ArchiveOmniDTO;
+import com.auto1.testdatastorage.dto.OmniDTO;
+import com.auto1.testdatastorage.dto.OmniItemCountDTO;
+import com.auto1.testdatastorage.dto.OmniSearchDTO;
 import com.auto1.testdatastorage.service.OmniQueueService;
-import com.auto1.testdatastorage.service.OmniTypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -18,10 +20,9 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("v1/")
-public class TestDataStorageController implements TestDataStorageApi {
+public class OmniQueueController implements OmniQueueApi {
 
     private final OmniQueueService omniQueueService;
-    private final OmniTypeService omniTypeService;
 
     @Override
     @ResponseStatus(CREATED)
@@ -65,26 +66,4 @@ public class TestDataStorageController implements TestDataStorageApi {
     public void archiveOmni(ArchiveOmniDTO archiveOmniDTO) {
         omniQueueService.archiveOmni(archiveOmniDTO);
     }
-
-    @Override
-    @ResponseStatus(CREATED)
-    public void createOmniType(OmniTypeDTO omniTypeDTO) {
-        omniTypeService.createOmniType(omniTypeDTO);
-    }
-
-    @Override
-    public OmniTypeDTO updateOmniTypeById(Long id, OmniTypeDTO omniTypeDTO) {
-        return omniTypeService.updateOmniTypeById(id, omniTypeDTO);
-    }
-
-    @Override
-    public void deleteOmniTypeById(Long id) {
-        omniTypeService.deleteOmniTypeById(id);
-    }
-
-    @Override
-    public List<OmniTypeDTO> getAllOmniTypes() {
-        return omniTypeService.getAllOmniTypes();
-    }
-
 }
