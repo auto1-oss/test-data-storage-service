@@ -5,14 +5,12 @@ import com.auto1.testdatastorage.domain.OmniType;
 import com.auto1.testdatastorage.dto.OmniDTO;
 import com.auto1.testdatastorage.dto.OmniTypeDTO;
 import lombok.experimental.UtilityClass;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.springframework.beans.BeanUtils.copyProperties;
 
-@Component
 @UtilityClass
 public class EntityMapper {
 
