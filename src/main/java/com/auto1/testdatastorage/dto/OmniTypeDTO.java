@@ -7,13 +7,13 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @ToString
-public class OmniDTO {
+@Builder
+public class OmniTypeDTO {
 
     private Long id;
-    private String data;
-    private Boolean archived;
+    private String dataType;
+    private String meta;
     private LocalDateTime created;
     private LocalDateTime updated;
 

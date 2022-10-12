@@ -7,6 +7,6 @@ public class OmniItemCountDTO {
 
     private String dataType;
     private Long itemCount;
-    private String owner;
+    private String meta;
 
 }

@@ -1,27 +1,37 @@
 package com.auto1.testdatastorage.mapping;
 
-import com.auto1.testdatastorage.domain.OmniQueueItem;
+import com.auto1.testdatastorage.domain.Omni;
+import com.auto1.testdatastorage.domain.OmniType;
 import com.auto1.testdatastorage.dto.OmniDTO;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import com.auto1.testdatastorage.dto.OmniTypeDTO;
+import lombok.experimental.UtilityClass;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.springframework.beans.BeanUtils.copyProperties;
 
-@Component
-@RequiredArgsConstructor
+@UtilityClass
 public class EntityMapper {
 
-    public static OmniDTO toDTO(final OmniQueueItem omniQueueItem) {
+    public static OmniDTO toOmniDTO(final Omni omni) {
         final OmniDTO omniDTO = new OmniDTO();
-        copyProperties(omniQueueItem, omniDTO);
+        copyProperties(omni, omniDTO);
         return omniDTO;
     }
 
-    public static List<OmniDTO> toDTO(final List<OmniQueueItem> omniQueueItems) {
-        return omniQueueItems.parallelStream().map(EntityMapper::toDTO).collect(Collectors.toList());
+    public static List<OmniDTO> toOmniDTO(final List<Omni> omnis) {
+        return omnis.parallelStream().map(EntityMapper::toOmniDTO).collect(Collectors.toList());
+    }
+
+    public static OmniTypeDTO toOmniTypeDTO(final OmniType omniType) {
+        final OmniTypeDTO omniTypeDTO = new OmniTypeDTO();
+        copyProperties(omniType, omniTypeDTO);
+        return omniTypeDTO;
+    }
+
+    public static List<OmniTypeDTO> toOmniTypeDTO(final List<OmniType> omniTypes) {
+        return omniTypes.parallelStream().map(EntityMapper::toOmniTypeDTO).collect(Collectors.toList());
     }
 
 }
