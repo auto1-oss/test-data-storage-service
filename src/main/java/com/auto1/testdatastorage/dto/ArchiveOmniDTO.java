@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @ToString
 public class ArchiveOmniDTO {
 
-    String dataType;
-    LocalDateTime createdBefore;
+    private String dataType;
+    private LocalDateTime createdBefore;
 
 }

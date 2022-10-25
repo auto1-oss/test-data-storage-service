@@ -1,11 +1,11 @@
 package com.auto1.testdatastorage.controller;
 
-import com.auto1.testdatastorage.client.TestDataStorageApi;
+import com.auto1.testdatastorage.client.OmniQueueApi;
 import com.auto1.testdatastorage.dto.ArchiveOmniDTO;
 import com.auto1.testdatastorage.dto.OmniDTO;
 import com.auto1.testdatastorage.dto.OmniItemCountDTO;
 import com.auto1.testdatastorage.dto.OmniSearchDTO;
-import com.auto1.testdatastorage.service.TestDataStorageService;
+import com.auto1.testdatastorage.service.OmniQueueService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,57 +22,50 @@ import static org.springframework.http.HttpStatus.OK;
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 @RequestMapping("v1/")
-public class TestDataStorageController implements TestDataStorageApi {
+public class OmniQueueController implements OmniQueueApi {
 
-    private final TestDataStorageService testDataStorageService;
+    private final OmniQueueService omniQueueService;
 
     @Override
     @ResponseStatus(CREATED)
-    public void createOmni(String dataType, String omni) {
-        testDataStorageService.createOmni(dataType, omni);
+    public void createOmni(String dataType, String data) {
+        omniQueueService.createOmni(dataType, data);
     }
 
     @Override
     @ResponseStatus(OK)
     public String getOmni(String dataType) {
-        return testDataStorageService.getOmni(dataType);
+        return omniQueueService.getOmni(dataType);
     }
 
     @Override
     @ResponseStatus(OK)
     public void purgeAllByDataType(String dataType) {
-        testDataStorageService.purgeAllByDataType(dataType);
+        omniQueueService.purgeAllByDataType(dataType);
     }
 
     @Override
-    @ResponseStatus(OK)
-    public void purgeAllData() {
-        testDataStorageService.purgeAllData();
-    }
-
-    @Override
-    public OmniItemCountDTO countOmniTypeItems(String dataType) {
-        return testDataStorageService.countOmniByDataType(dataType);
+    public OmniItemCountDTO countOmniByDataType(String dataType) {
+        return omniQueueService.countOmniByDataType(dataType);
     }
 
     @Override
     public List<OmniItemCountDTO> countAllOmni() {
-        return testDataStorageService.countAllOmni();
+        return omniQueueService.countAllOmni();
     }
 
     @Override
     public void deleteOmniById(Long id) {
-        testDataStorageService.deleteOmniById(id);
+        omniQueueService.deleteOmniById(id);
     }
 
     @Override
     public List<OmniDTO> searchOmnis(OmniSearchDTO searchDTO) {
-        return testDataStorageService.searchOmnis(searchDTO);
+        return omniQueueService.searchOmnis(searchDTO);
     }
 
     @Override
     public void archiveOmni(ArchiveOmniDTO archiveOmniDTO) {
-        testDataStorageService.archiveOmni(archiveOmniDTO);
+        omniQueueService.archiveOmni(archiveOmniDTO);
     }
-
 }

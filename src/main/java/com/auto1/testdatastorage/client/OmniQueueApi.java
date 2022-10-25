@@ -11,15 +11,15 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(name = "test-data-storage-service")
-public interface TestDataStorageApi {
+@FeignClient(name = "omni-queue-service")
+public interface OmniQueueApi {
 
     @ApiOperation("Create omni")
     @PostMapping(
             value = "/queue/omni/{data-type}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    void createOmni(@PathVariable("data-type") String dataType, @RequestBody String omni);
+    void createOmni(@PathVariable("data-type") String dataType, @RequestBody String data);
 
     @ApiOperation("Get omni")
     @GetMapping(
@@ -35,19 +35,12 @@ public interface TestDataStorageApi {
     )
     void purgeAllByDataType(@PathVariable("data-type") String dataType);
 
-    @ApiOperation("Purge all data")
-    @PostMapping(
-            value = "/queue/omni/purge",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    void purgeAllData();
-
     @ApiOperation("Count omni by data type")
     @GetMapping(
             value = "/queue/omni/{data-type}/count",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    OmniItemCountDTO countOmniTypeItems(@PathVariable("data-type") String dataType);
+    OmniItemCountDTO countOmniByDataType(@PathVariable("data-type") String dataType);
 
     @ApiOperation("Count all omni")
     @GetMapping(

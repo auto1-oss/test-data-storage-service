@@ -10,16 +10,15 @@ SET search_path = test_data_storage, pg_catalog, public;
 
 CREATE TABLE test_data_storage.omni_queue
 (
-    id        INTEGER NOT NULL PRIMARY KEY,
-    data_type TEXT,
-    data      TEXT,
-    archived  BOOLEAN,
-    created   TIMESTAMP WITHOUT TIME ZONE,
-    updated   TIMESTAMP WITHOUT TIME ZONE
+    id           BIGINT NOT NULL PRIMARY KEY,
+    omni_type_id BIGINT,
+    data         TEXT,
+    archived     BOOLEAN,
+    created      TIMESTAMP WITHOUT TIME ZONE,
+    updated      TIMESTAMP WITHOUT TIME ZONE
 );
 
 CREATE INDEX idx_omni_queue_id ON test_data_storage.omni_queue (id);
-CREATE INDEX idx_omni_queue_data_type ON test_data_storage.omni_queue (data_type);
 CREATE INDEX idx_omni_queue_archived ON test_data_storage.omni_queue (archived);
 CREATE INDEX idx_omni_queue_updated ON test_data_storage.omni_queue (updated);
 CREATE INDEX idx_omni_queue_created ON test_data_storage.omni_queue (created);
@@ -44,19 +43,21 @@ CREATE SEQUENCE public.hibernate_sequence
     NO MINVALUE
     NO MAXVALUE CACHE 1;
 
-CREATE TABLE test_data_storage.type_owners
+CREATE TABLE test_data_storage.omni_type
 (
     id        BIGINT PRIMARY KEY,
     data_type TEXT,
-    owner     VARCHAR
+    meta      TEXT,
+    created   TIMESTAMP WITHOUT TIME ZONE,
+    updated   TIMESTAMP WITHOUT TIME ZONE
 );
 
-CREATE SEQUENCE test_data_storage.type_owners_sequence
+CREATE SEQUENCE test_data_storage.omni_type_sequence
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE CACHE 1;
 
-ALTER TABLE test_data_storage.type_owners
+ALTER TABLE test_data_storage.omni_type
     ADD CONSTRAINT constraint_type UNIQUE (data_type);
 

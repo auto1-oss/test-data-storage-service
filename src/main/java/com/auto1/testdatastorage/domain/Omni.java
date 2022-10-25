@@ -14,14 +14,21 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(schema = "test_data_storage", name = "omni_queue")
-public class OmniQueueItem {
+public class Omni {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "omni_queue_sequence_generator")
-    @SequenceGenerator(name = "omni_queue_sequence_generator", sequenceName = "test_data_storage.omni_queue_sequence")
+    @SequenceGenerator(
+            name = "omni_queue_sequence_generator",
+            sequenceName = "test_data_storage.omni_queue_sequence",
+            allocationSize = 1)
     private Long id;
     private String data;
-    private String dataType;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "omni_type_id")
+    private OmniType omniType;
+
     private Boolean archived;
     private LocalDateTime created;
     private LocalDateTime updated;
