@@ -3,6 +3,7 @@ package com.auto1.testdatastorage.service;
 import com.auto1.testdatastorage.domain.OmniType;
 import com.auto1.testdatastorage.dto.OmniTypeDTO;
 import com.auto1.testdatastorage.mapping.EntityMapper;
+import com.auto1.testdatastorage.repository.OmniRepository;
 import com.auto1.testdatastorage.repository.OmniTypeRepository;
 import com.auto1.testdatastorage.utils.ExceptionSupplier;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,8 @@ import java.util.stream.Collectors;
 public class OmniTypeService {
 
     private final OmniTypeRepository omniTypeRepository;
+
+    private final OmniRepository omniRepository;
 
     public void createOmniType(OmniTypeDTO omniTypeDTO) {
         log.info("Create omni type [{}]", omniTypeDTO.getDataType());
@@ -45,7 +48,9 @@ public class OmniTypeService {
         omniType.setUpdated(LocalDateTime.now());
 
         var updatedOmniType = omniTypeRepository.save(omniType);
-        return EntityMapper.toOmniTypeDTO(updatedOmniType);
+        var updatedOmniTypeDTO = EntityMapper.toOmniTypeDTO(updatedOmniType);
+        updatedOmniTypeDTO.setCount(this.omniRepository.countByOmniTypeAndArchived(updatedOmniType, false));
+        return updatedOmniTypeDTO;
     }
 
     public void deleteOmniTypeById(Long id) {
@@ -58,9 +63,15 @@ public class OmniTypeService {
 
     public List<OmniTypeDTO> getAllOmniTypes() {
         log.info("Get all omni types");
-        var omniTypes = omniTypeRepository.findAll();
-        return omniTypes.stream()
+        var omniTypes = omniTypeRepository.findAllByOrderByIdAsc();
+        List<OmniTypeDTO> omniTypeDTOS = omniTypes.stream()
                 .map(EntityMapper::toOmniTypeDTO)
                 .collect(Collectors.toList());
+
+        omniTypeDTOS.forEach(omniTypeDTO -> {
+            omniTypeDTO.setCount(this.omniRepository.countByOmniTypeAndArchived(EntityMapper.toOmniType(omniTypeDTO), false));
+        });
+
+        return omniTypeDTOS;
     }
 }

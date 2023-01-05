@@ -30,6 +30,12 @@ public class EntityMapper {
         return omniTypeDTO;
     }
 
+    public static OmniType toOmniType(final OmniTypeDTO omniTypeDTO) {
+        final OmniType omniType = new OmniType();
+        copyProperties(omniTypeDTO, omniType);
+        return omniType;
+    }
+
     public static List<OmniTypeDTO> toOmniTypeDTO(final List<OmniType> omniTypes) {
         return omniTypes.parallelStream().map(EntityMapper::toOmniTypeDTO).collect(Collectors.toList());
     }

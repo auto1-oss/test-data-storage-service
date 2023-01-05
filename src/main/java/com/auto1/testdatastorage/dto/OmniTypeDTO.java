@@ -13,6 +13,7 @@ public class OmniTypeDTO {
 
     private Long id;
     private String dataType;
+    private Long count;
     private String meta;
     private LocalDateTime created;
     private LocalDateTime updated;
