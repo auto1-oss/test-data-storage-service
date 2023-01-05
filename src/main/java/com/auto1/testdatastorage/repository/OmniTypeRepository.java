@@ -15,6 +15,8 @@ public interface OmniTypeRepository
 
     Optional<OmniType> findByDataType(String dataType);
 
+    List<OmniType> findAllByOrderByIdAsc();
+
     void deleteById(Long id);
 
     @Query(value = "SELECT DISTINCT data_type FROM test_data_storage.omni_type ORDER BY data_type ASC", nativeQuery = true)

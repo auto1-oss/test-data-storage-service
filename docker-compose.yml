@@ -1,0 +1,46 @@
+version: '2'
+
+services:
+  db:
+    image: 'postgres:13.1-alpine'
+    container_name: test-data-storage-db
+    expose:
+      - 5432
+    ports:
+      - 5432:5432
+    volumes:
+      - ./scripts/main:/docker-entrypoint-initdb.d
+      - ./.postgres/test_data_storage:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=test_data_storage
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_MULTIPLE_DATABASES=test_data_storage
+      - PGDATA=/var/lib/postgresql/data
+    logging:
+      options:
+        max-file: "5"
+        max-size: "10m"
+
+
+  test-data-service:
+    image: test-data-storage-service:latest
+    build:
+      context: .
+    container_name: test-data-service
+    expose:
+      - 8080
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/test_data_storage
+      - SPRING_DATASOURCE_USERNAME=test_data_storage
+      - SPRING_DATASOURCE_PASSWORD=admin
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    logging:
+      options:
+        max-file: "5"
+        max-size: "10m"
+
+
