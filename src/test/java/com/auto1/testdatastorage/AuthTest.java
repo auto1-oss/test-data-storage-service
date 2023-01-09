@@ -102,7 +102,7 @@ public class AuthTest {
     public enum HttpMethod {
         POST((spec, body) -> body != null ? spec.body(body).when().post() : spec.when().post()),
 
-        PUT((spec, body) -> body != null ? spec.body(body).when().post() : spec.when().put()),
+        PUT((spec, body) -> body != null ? spec.body(body).when().put() : spec.when().put()),
 
         GET((spec, body) -> spec.when().get()),
 

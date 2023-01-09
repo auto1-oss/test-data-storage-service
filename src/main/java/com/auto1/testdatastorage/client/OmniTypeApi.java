@@ -25,7 +25,7 @@ public interface OmniTypeApi {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    OmniTypeDTO updateOmniTypeById(@PathVariable("id") Long id, @RequestBody OmniTypeDTO testStoryDTO);
+    OmniTypeDTO updateOmniTypeById(@PathVariable("id") Long id, @RequestBody OmniTypeDTO omniTypeDTO);
 
     @ApiOperation("Delete omni type")
     @DeleteMapping(
