@@ -42,7 +42,6 @@ public class AuthTest {
 
         var specBase = given()
                 .config(TestUtils.getConfig())
-                .headers(TestUtils.getHeadersWithoutAuth())
                 .baseUri(baseUrl)
                 .basePath(path);
 
@@ -55,7 +54,7 @@ public class AuthTest {
     public void invalidUsername(HttpMethod httpMethod, String path, Object body) {
         var specBase = given()
                 .config(TestUtils.getConfig())
-                .headers(TestUtils.getHeadersWithBasicAuth("no such user", validPassword))
+                .auth().basic("no such user", validPassword)
                 .baseUri(baseUrl)
                 .basePath(path);
 
@@ -68,7 +67,7 @@ public class AuthTest {
     public void invalidPassword(HttpMethod httpMethod, String path, Object body) {
         var specBase = given()
                 .config(TestUtils.getConfig())
-                .headers(TestUtils.getHeadersWithBasicAuth(validUsername, "wrong one"))
+                .auth().basic(validUsername, "wrong one")
                 .baseUri(baseUrl)
                 .basePath(path);
 
@@ -93,7 +92,6 @@ public class AuthTest {
                 Arguments.of(HttpMethod.PUT, "/queue/omni-type/" + DATA_TYPE_1_ID, new OmniTypeDTO()),
                 Arguments.of(HttpMethod.DELETE, "/queue/omni-type/" + DATA_TYPE_1_ID, null),
                 Arguments.of(HttpMethod.GET, "/queue/omni-types", null)
-
         );
         //@formatter:on
     }

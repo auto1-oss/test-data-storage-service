@@ -10,13 +10,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import static io.restassured.RestAssured.given;
@@ -26,6 +26,7 @@ import static org.hamcrest.Matchers.is;
 @SpringBootTest(classes = TestDataStorageApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
+@AutoConfigureMockMvc
 public class OmniTypeTest {
 
     @Autowired
@@ -45,7 +46,7 @@ public class OmniTypeTest {
 
     @Test
     public void createOmniType() {
-        OmniType omniType = OmniType.builder()
+        var omniType = OmniType.builder()
                 .dataType("Test data")
                 .meta("Test meta")
                 .created(LocalDateTime.now())
@@ -54,7 +55,8 @@ public class OmniTypeTest {
         //@formatter:off
         given()
                 .config(TestUtils.getConfig())
-                .headers(TestUtils.getHeadersWithBasicAuth(username, password))
+                .headers(TestUtils.getHeaders())
+                .auth().basic(username, password)
                 .baseUri(baseUrl)
                 .basePath("/queue/omni-type")
                 .body(omniType)
@@ -89,10 +91,11 @@ public class OmniTypeTest {
                         .build();
 
         //@formatter:off
-        OmniTypeDTO result =
+        var result =
                 given()
                         .config(TestUtils.getConfig())
-                        .headers(TestUtils.getHeadersWithBasicAuth(username, password))
+                        .headers(TestUtils.getHeaders())
+                        .auth().basic(username, password)
                         .baseUri(baseUrl)
                         .basePath(String.format("/queue/omni-type/%s", omni.getId()))
                         .body(omniTypeDTO)
@@ -127,7 +130,8 @@ public class OmniTypeTest {
         //@formatter:off
         given()
                 .config(TestUtils.getConfig())
-                .headers(TestUtils.getHeadersWithBasicAuth(username, password))
+                .headers(TestUtils.getHeaders())
+                .auth().basic(username, password)
                 .baseUri(baseUrl)
                 .basePath(String.format("/queue/omni-type/%s", id))
                 .body(omniTypeDTO)
@@ -143,10 +147,10 @@ public class OmniTypeTest {
 
     @Test
     public void deleteOmniTypeById() {
-        String dataType1 = "data type 1";
-        String dataType2 = "data type 2";
-        OmniType omniType1 = TestUtils.buildOmniTypeItem(dataType1, "omni type 1");
-        OmniType omniType2 = TestUtils.buildOmniTypeItem(dataType2, "omni type 2");
+        var dataType1 = "data type 1";
+        var dataType2 = "data type 2";
+        var omniType1 = TestUtils.buildOmniTypeItem(dataType1, "omni type 1");
+        var omniType2 = TestUtils.buildOmniTypeItem(dataType2, "omni type 2");
 
         this.omniTypeRepository.saveAll(Arrays.asList(omniType1, omniType2));
 
@@ -158,6 +162,7 @@ public class OmniTypeTest {
         given()
                 .baseUri(baseUrl)
                 .basePath(String.format("/queue/omni-type/%s", omniTypeId))
+                .auth().basic(username, password)
         .when()
                 .delete()
                 .prettyPeek()
@@ -171,20 +176,21 @@ public class OmniTypeTest {
 
     @Test
     public void getAllOmniTypes() {
-        String dataType1 = "data type 1";
-        String dataType2 = "data type 2";
-        OmniType omniType1 = TestUtils.buildOmniTypeItem(dataType1, "omni type 1");
-        OmniType omniType2 = TestUtils.buildOmniTypeItem(dataType2, "omni type 2");
+        var dataType1 = "data type 1";
+        var dataType2 = "data type 2";
+        var omniType1 = TestUtils.buildOmniTypeItem(dataType1, "omni type 1");
+        var omniType2 = TestUtils.buildOmniTypeItem(dataType2, "omni type 2");
 
         this.omniTypeRepository.saveAll(Arrays.asList(omniType1, omniType2));
 
         assertThat(this.omniTypeRepository.count(), is(2L));
 
         //@formatter:off
-        List<OmniTypeDTO> result =
+        var result =
                 given()
                         .baseUri(baseUrl)
                         .basePath("/queue/omni-types")
+                        .auth().basic(username, password)
                 .when()
                         .get()
                         .prettyPeek()

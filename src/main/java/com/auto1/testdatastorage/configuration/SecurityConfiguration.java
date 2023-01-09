@@ -21,6 +21,7 @@ public class SecurityConfiguration {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf().disable();
         http.sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.authorizeRequests().anyRequest().authenticated();
         http.httpBasic();
@@ -29,6 +30,7 @@ public class SecurityConfiguration {
 
     @Bean
     UserDetailsService inMemoryUserDetailsService() {
+
         var userDetailsService = new InMemoryUserDetailsManager();
         var user = User.withUsername(username)
                 .password("{noop}" + password)

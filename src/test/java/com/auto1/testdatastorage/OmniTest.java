@@ -61,9 +61,10 @@ public class OmniTest {
         //@formatter:off
         given()
                 .config(TestUtils.getConfig())
-                .headers(TestUtils.getHeadersWithBasicAuth(username, password))
+                .headers(TestUtils.getHeaders())
                 .baseUri(baseUrl)
                 .basePath(String.format("/queue/omni/%s", dataType1))
+                .auth().basic(username, password)
                 .body(omni1)
         .when()
                 .post()
@@ -90,6 +91,7 @@ public class OmniTest {
         given()
                 .baseUri(baseUrl)
                 .basePath(String.format("/queue/omni/%s", dataType1))
+                .auth().basic(username, password)
         .when()
                 .get()
                 .prettyPeek()
@@ -119,6 +121,7 @@ public class OmniTest {
         given()
                 .baseUri(baseUrl)
                 .basePath(String.format("/queue/omni/%s/purge", dataType1))
+                .auth().basic(username, password)
         .when()
                 .post()
                 .prettyPeek()
@@ -141,6 +144,7 @@ public class OmniTest {
         given()
                 .baseUri(baseUrl)
                 .basePath(String.format("/queue/omni/%s/count", dataType1))
+                .auth().basic(username, password)
         .when()
                 .get()
                 .prettyPeek()
@@ -156,10 +160,11 @@ public class OmniTest {
         given()
                 .baseUri(baseUrl)
                 .basePath(String.format("/queue/omni/%s/count", dataType1))
-                .when()
+                .auth().basic(username, password)
+        .when()
                 .get()
                 .prettyPeek()
-                .then()
+        .then()
                 .statusCode(200)
                 .body("dataType", is(dataType1))
                 .body("itemCount", is(2));
@@ -167,10 +172,11 @@ public class OmniTest {
         given()
                 .baseUri(baseUrl)
                 .basePath(String.format("/queue/omni/%s/count", dataType2))
-                .when()
+                .auth().basic(username, password)
+        .when()
                 .get()
                 .prettyPeek()
-                .then()
+        .then()
                 .statusCode(200)
                 .body("dataType", is(dataType2))
                 .body("itemCount", is(1));
@@ -187,6 +193,7 @@ public class OmniTest {
         given()
                 .baseUri(baseUrl)
                 .basePath("/queue/omni/count")
+                .auth().basic(username, password)
         .when()
                 .get()
                 .prettyPeek()
@@ -206,6 +213,7 @@ public class OmniTest {
         given()
                 .baseUri(baseUrl)
                 .basePath("/queue/omni/count")
+                .auth().basic(username, password)
         .when()
                 .get()
                 .prettyPeek()
@@ -228,6 +236,7 @@ public class OmniTest {
         given()
                 .baseUri(baseUrl)
                 .basePath("/queue/omni/count")
+                .auth().basic(username, password)
         .when()
                 .get()
                 .prettyPeek()
@@ -247,6 +256,7 @@ public class OmniTest {
         given()
                 .baseUri(baseUrl)
                 .basePath(String.format("/queue/omni/%s", id))
+                .auth().basic(username, password)
         .when()
                 .delete()
                 .prettyPeek()
@@ -276,9 +286,10 @@ public class OmniTest {
         var result =
                 given()
                         .config(TestUtils.getConfig())
-                        .headers(TestUtils.getHeadersWithBasicAuth(username, password))
+                        .headers(TestUtils.getHeaders())
                         .baseUri(baseUrl)
                         .basePath("/queue/omni/search")
+                        .auth().basic(username, password)
                         .body(omniSearchDTO)
                 .when()
                         .post()
@@ -306,7 +317,7 @@ public class OmniTest {
 
         this.omniRepository.saveAll(Arrays.asList(omni1, omni2, omni3));
 
-        OmniSearchDTO omniSearchDTO = new OmniSearchDTO();
+        var omniSearchDTO = new OmniSearchDTO();
         omniSearchDTO.setArchived(true);
         omniSearchDTO.setDataType(dataType1);
         omniSearchDTO.setCreatedBeforeDate(time);
@@ -315,9 +326,10 @@ public class OmniTest {
         var result =
                 given()
                         .config(TestUtils.getConfig())
-                        .headers(TestUtils.getHeadersWithBasicAuth(username, password))
+                        .headers(TestUtils.getHeaders())
                         .baseUri(baseUrl)
                         .basePath("/queue/omni/search")
+                        .auth().basic(username, password)
                         .body(omniSearchDTO)
                 .when()
                         .post()
@@ -348,16 +360,17 @@ public class OmniTest {
 
         this.omniRepository.saveAll(Arrays.asList(omni1, omni2));
 
-        ArchiveOmniDTO archiveOmniDTO = new ArchiveOmniDTO();
+        var archiveOmniDTO = new ArchiveOmniDTO();
         archiveOmniDTO.setDataType(dataType1);
         archiveOmniDTO.setCreatedBefore(time1);
 
         //@formatter:off
         given()
                 .config(TestUtils.getConfig())
-                .headers(TestUtils.getHeadersWithBasicAuth(username, password))
+                .headers(TestUtils.getHeaders())
                 .baseUri(baseUrl)
                 .basePath("/queue/omni/clean")
+                .auth().basic(username, password)
                 .body(archiveOmniDTO)
         .when()
                 .post()
@@ -368,7 +381,7 @@ public class OmniTest {
                 .body()
                 .jsonPath();
         //@formatter:on
-        OmniSearchDTO omniSearchDTO = new OmniSearchDTO();
+        var omniSearchDTO = new OmniSearchDTO();
         omniSearchDTO.setDataType(dataType1);
         omniSearchDTO.setArchived(true);
         omniSearchDTO.setCreatedBeforeDate(time1);
@@ -377,9 +390,10 @@ public class OmniTest {
         var result =
                 given()
                         .config(TestUtils.getConfig())
-                        .headers(TestUtils.getHeadersWithBasicAuth(username, password))
+                        .headers(TestUtils.getHeaders())
                         .baseUri(baseUrl)
                         .basePath("/queue/omni/search")
+                        .auth().basic(username, password)
                         .body(omniSearchDTO)
                 .when()
                         .post()

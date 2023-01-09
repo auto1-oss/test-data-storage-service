@@ -44,14 +44,14 @@ public class TestUtils {
         return RestAssured.config().encoderConfig(encoderConfig().encodeContentTypeAs("JSON", ContentType.TEXT));
     }
 
-    public Map<String, String> getHeadersWithoutAuth() {
+    public Map<String, String> getHeaders() {
         return Map.of(HttpHeaders.CONTENT_TYPE, "application/json");
     }
 
-    public Map<String, String> getHeadersWithBasicAuth(String username, String password) {
-        return Map.of(
-                HttpHeaders.CONTENT_TYPE, "application/json",
-                HttpHeaders.AUTHORIZATION, BasicAuthUtil.getBasicAuthHeader(username, password)
-        );
-    }
+//    public Map<String, String> getHeadersWithBasicAuth(String username, String password) {
+//        return Map.of(
+//                HttpHeaders.CONTENT_TYPE, "application/json",
+//                HttpHeaders.AUTHORIZATION, BasicAuthUtil.getBasicAuthHeader(username, password)
+//        );
+//    }
 }
