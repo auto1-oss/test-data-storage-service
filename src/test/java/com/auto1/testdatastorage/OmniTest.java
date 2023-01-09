@@ -1,6 +1,5 @@
 package com.auto1.testdatastorage;
 
-
 import com.auto1.testdatastorage.domain.OmniType;
 import com.auto1.testdatastorage.dto.ArchiveOmniDTO;
 import com.auto1.testdatastorage.dto.OmniDTO;
@@ -37,6 +36,10 @@ public class OmniTest {
 
     @Value("http://localhost:${local.server.port}/v1")
     private String baseUrl;
+    @Value("${basic.username}")
+    private String username;
+    @Value("${basic.password}")
+    private String password;
 
     private final String dataType1 = "data type 1";
     private final String dataType2 = "data type 2";
@@ -58,7 +61,7 @@ public class OmniTest {
         //@formatter:off
         given()
                 .config(TestUtils.getConfig())
-                .headers(TestUtils.getHeaders())
+                .headers(TestUtils.getHeadersWithBasicAuth(username, password))
                 .baseUri(baseUrl)
                 .basePath(String.format("/queue/omni/%s", dataType1))
                 .body(omni1)
@@ -273,7 +276,7 @@ public class OmniTest {
         var result =
                 given()
                         .config(TestUtils.getConfig())
-                        .headers(TestUtils.getHeaders())
+                        .headers(TestUtils.getHeadersWithBasicAuth(username, password))
                         .baseUri(baseUrl)
                         .basePath("/queue/omni/search")
                         .body(omniSearchDTO)
@@ -312,7 +315,7 @@ public class OmniTest {
         var result =
                 given()
                         .config(TestUtils.getConfig())
-                        .headers(TestUtils.getHeaders())
+                        .headers(TestUtils.getHeadersWithBasicAuth(username, password))
                         .baseUri(baseUrl)
                         .basePath("/queue/omni/search")
                         .body(omniSearchDTO)
@@ -352,7 +355,7 @@ public class OmniTest {
         //@formatter:off
         given()
                 .config(TestUtils.getConfig())
-                .headers(TestUtils.getHeaders())
+                .headers(TestUtils.getHeadersWithBasicAuth(username, password))
                 .baseUri(baseUrl)
                 .basePath("/queue/omni/clean")
                 .body(archiveOmniDTO)
@@ -374,7 +377,7 @@ public class OmniTest {
         var result =
                 given()
                         .config(TestUtils.getConfig())
-                        .headers(TestUtils.getHeaders())
+                        .headers(TestUtils.getHeadersWithBasicAuth(username, password))
                         .baseUri(baseUrl)
                         .basePath("/queue/omni/search")
                         .body(omniSearchDTO)

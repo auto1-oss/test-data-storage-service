@@ -33,6 +33,10 @@ public class OmniTypeTest {
 
     @Value("http://localhost:${local.server.port}/v1")
     private String baseUrl;
+    @Value("${basic.username}")
+    private String username;
+    @Value("${basic.password}")
+    private String password;
 
     @BeforeEach
     public void setup() {
@@ -50,7 +54,7 @@ public class OmniTypeTest {
         //@formatter:off
         given()
                 .config(TestUtils.getConfig())
-                .headers(TestUtils.getHeaders())
+                .headers(TestUtils.getHeadersWithBasicAuth(username, password))
                 .baseUri(baseUrl)
                 .basePath("/queue/omni-type")
                 .body(omniType)
@@ -88,7 +92,7 @@ public class OmniTypeTest {
         OmniTypeDTO result =
                 given()
                         .config(TestUtils.getConfig())
-                        .headers(TestUtils.getHeaders())
+                        .headers(TestUtils.getHeadersWithBasicAuth(username, password))
                         .baseUri(baseUrl)
                         .basePath(String.format("/queue/omni-type/%s", omni.getId()))
                         .body(omniTypeDTO)
@@ -123,7 +127,7 @@ public class OmniTypeTest {
         //@formatter:off
         given()
                 .config(TestUtils.getConfig())
-                .headers(TestUtils.getHeaders())
+                .headers(TestUtils.getHeadersWithBasicAuth(username, password))
                 .baseUri(baseUrl)
                 .basePath(String.format("/queue/omni-type/%s", id))
                 .body(omniTypeDTO)
