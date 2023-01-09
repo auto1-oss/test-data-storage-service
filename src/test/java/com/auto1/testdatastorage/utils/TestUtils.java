@@ -47,11 +47,4 @@ public class TestUtils {
     public Map<String, String> getHeaders() {
         return Map.of(HttpHeaders.CONTENT_TYPE, "application/json");
     }
-
-//    public Map<String, String> getHeadersWithBasicAuth(String username, String password) {
-//        return Map.of(
-//                HttpHeaders.CONTENT_TYPE, "application/json",
-//                HttpHeaders.AUTHORIZATION, BasicAuthUtil.getBasicAuthHeader(username, password)
-//        );
-//    }
 }
