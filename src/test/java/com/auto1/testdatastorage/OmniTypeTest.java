@@ -3,6 +3,7 @@ package com.auto1.testdatastorage;
 
 import com.auto1.testdatastorage.domain.OmniType;
 import com.auto1.testdatastorage.dto.OmniTypeDTO;
+import com.auto1.testdatastorage.repository.OmniRepository;
 import com.auto1.testdatastorage.repository.OmniTypeRepository;
 import com.auto1.testdatastorage.utils.TestUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +30,8 @@ public class OmniTypeTest {
 
     @Autowired
     private OmniTypeRepository omniTypeRepository;
+    @Autowired
+    private OmniRepository omniRepository;
 
     @Value("http://localhost:${local.server.port}/v1")
     private String baseUrl;
@@ -40,6 +43,7 @@ public class OmniTypeTest {
     @BeforeEach
     public void setup() {
         this.omniTypeRepository.deleteAll();
+        this.omniRepository.deleteAll();
     }
 
     @Test
@@ -149,10 +153,13 @@ public class OmniTypeTest {
         var dataType2 = "data type 2";
         var omniType1 = TestUtils.buildOmniTypeItem(dataType1, "omni type 1");
         var omniType2 = TestUtils.buildOmniTypeItem(dataType2, "omni type 2");
+        var omni = TestUtils.buildOmniItem(omniType1, dataType2, false);
 
         this.omniTypeRepository.saveAll(Arrays.asList(omniType1, omniType2));
+        this.omniRepository.save(omni);
 
         assertThat(this.omniTypeRepository.count(), is(2L));
+        assertThat(this.omniRepository.count(), is(1L));
 
         var omniTypeId = this.omniTypeRepository.findByDataType(dataType1).get().getId();
 
@@ -169,6 +176,7 @@ public class OmniTypeTest {
         //@formatter:on
 
         assertThat(this.omniTypeRepository.count(), is(1L));
+        assertThat(this.omniRepository.count(), is(0L));
         assertThat(this.omniTypeRepository.findById(omniTypeId), is(Optional.empty()));
     }
 
