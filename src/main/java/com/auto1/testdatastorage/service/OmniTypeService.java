@@ -57,7 +57,10 @@ public class OmniTypeService {
         log.info("Delete omni type by data type [{}]", id);
         Optional.of(id)
                 .filter(omniTypeRepository::existsById)
-                .ifPresent(omniTypeRepository::deleteById);
+                .ifPresent(typeId -> {
+                    omniRepository.deleteAllByOmniTypeId(typeId);
+                    omniTypeRepository.deleteById(typeId);
+                });
         log.trace("Successfully deleted omni data type [{}]", id);
     }
 
