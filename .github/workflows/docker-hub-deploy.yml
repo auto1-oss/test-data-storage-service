@@ -2,7 +2,7 @@ name: Build Test data storage Docker Image
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ main ]
 
   workflow_dispatch:
 
