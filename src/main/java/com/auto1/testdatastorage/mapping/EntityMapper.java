@@ -30,6 +30,12 @@ public class EntityMapper {
         return omniTypeDTO;
     }
 
+    public static OmniTypeDTO toOmniTypeDTO(final OmniType.OmniTypeWithCount omniType) {
+        final OmniTypeDTO omniTypeDTO = new OmniTypeDTO();
+        copyProperties(omniType, omniTypeDTO);
+        return omniTypeDTO;
+    }
+
     public static OmniType toOmniType(final OmniTypeDTO omniTypeDTO) {
         final OmniType omniType = new OmniType();
         copyProperties(omniTypeDTO, omniType);

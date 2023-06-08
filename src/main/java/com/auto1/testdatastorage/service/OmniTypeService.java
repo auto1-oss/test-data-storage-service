@@ -66,15 +66,8 @@ public class OmniTypeService {
 
     public List<OmniTypeDTO> getAllOmniTypes() {
         log.info("Get all omni types");
-        var omniTypes = omniTypeRepository.findAllByOrderByIdAsc();
-        List<OmniTypeDTO> omniTypeDTOS = omniTypes.stream()
+        return omniTypeRepository.findAllAndCount().stream()
                 .map(EntityMapper::toOmniTypeDTO)
-                .collect(Collectors.toList());
-
-        omniTypeDTOS.forEach(omniTypeDTO -> {
-            omniTypeDTO.setCount(this.omniRepository.countByOmniTypeAndArchived(EntityMapper.toOmniType(omniTypeDTO), false));
-        });
-
-        return omniTypeDTOS;
+                .collect(Collectors.toUnmodifiableList());
     }
 }
