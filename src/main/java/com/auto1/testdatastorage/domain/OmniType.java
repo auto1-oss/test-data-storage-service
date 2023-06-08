@@ -28,4 +28,13 @@ public class OmniType {
     private LocalDateTime created;
     private LocalDateTime updated;
 
+    public interface OmniTypeWithCount {
+        Long getId();
+        String getDataType();
+        String getMeta();
+        LocalDateTime getCreated();
+        LocalDateTime getUpdated();
+        Long getCount();
+    }
+
 }
