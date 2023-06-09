@@ -1,14 +1,12 @@
 package com.auto1.testdatastorage.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Data
+@Setter
+@Getter
 @Entity
 @Builder
 @NoArgsConstructor
@@ -32,5 +30,4 @@ public class Omni {
     private Boolean archived;
     private LocalDateTime created;
     private LocalDateTime updated;
-
 }

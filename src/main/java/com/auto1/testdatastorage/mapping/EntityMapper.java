@@ -3,6 +3,7 @@ package com.auto1.testdatastorage.mapping;
 import com.auto1.testdatastorage.domain.Omni;
 import com.auto1.testdatastorage.domain.OmniType;
 import com.auto1.testdatastorage.dto.OmniDTO;
+import com.auto1.testdatastorage.dto.OmniItemCountDTO;
 import com.auto1.testdatastorage.dto.OmniTypeDTO;
 import lombok.experimental.UtilityClass;
 
@@ -34,6 +35,22 @@ public class EntityMapper {
         final OmniTypeDTO omniTypeDTO = new OmniTypeDTO();
         copyProperties(omniType, omniTypeDTO);
         return omniTypeDTO;
+    }
+
+    public static OmniItemCountDTO toOmniItemCountDTO(final OmniType.OmniTypeWithCount omniType) {
+        return OmniItemCountDTO.builder()
+                .dataType(omniType.getDataType())
+                .itemCount(omniType.getCount())
+                .meta(omniType.getMeta())
+                .build();
+    }
+
+    public static OmniItemCountDTO toOmniItemCountDTO(final OmniType omniType, long count) {
+        return OmniItemCountDTO.builder()
+                .dataType(omniType.getDataType())
+                .itemCount(count)
+                .meta(omniType.getMeta())
+                .build();
     }
 
     public static OmniType toOmniType(final OmniTypeDTO omniTypeDTO) {
