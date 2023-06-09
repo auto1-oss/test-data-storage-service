@@ -2,9 +2,7 @@ package com.auto1.testdatastorage.mapping;
 
 import com.auto1.testdatastorage.domain.Omni;
 import com.auto1.testdatastorage.domain.OmniType;
-import com.auto1.testdatastorage.dto.OmniDTO;
-import com.auto1.testdatastorage.dto.OmniItemCountDTO;
-import com.auto1.testdatastorage.dto.OmniTypeDTO;
+import com.auto1.testdatastorage.dto.*;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
@@ -22,7 +20,7 @@ public class EntityMapper {
     }
 
     public static List<OmniDTO> toOmniDTO(final List<Omni> omnis) {
-        return omnis.parallelStream().map(EntityMapper::toOmniDTO).collect(Collectors.toList());
+        return omnis.stream().map(EntityMapper::toOmniDTO).collect(Collectors.toList());
     }
 
     public static OmniTypeDTO toOmniTypeDTO(final OmniType omniType) {
@@ -60,7 +58,7 @@ public class EntityMapper {
     }
 
     public static List<OmniTypeDTO> toOmniTypeDTO(final List<OmniType> omniTypes) {
-        return omniTypes.parallelStream().map(EntityMapper::toOmniTypeDTO).collect(Collectors.toList());
+        return omniTypes.stream().map(EntityMapper::toOmniTypeDTO).collect(Collectors.toList());
     }
 
 }
