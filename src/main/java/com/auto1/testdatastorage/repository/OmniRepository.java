@@ -37,4 +37,13 @@ public interface OmniRepository
     @Transactional
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     List<Omni> findAllByOmniTypeAndCreatedBefore(OmniType omniType, LocalDateTime before);
+
+    @Modifying
+    @Query(
+            value = "UPDATE test_data_storage.omni_queue " +
+                    "SET archived = true, updated = NOW() " +
+                    "WHERE omni_type_id = :dataTypeId AND created < :before",
+            nativeQuery = true
+    )
+    int archiveByDataTypeAndCreatedBefore(Long dataTypeId, LocalDateTime before);
 }

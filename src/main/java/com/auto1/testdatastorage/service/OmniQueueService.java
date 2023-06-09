@@ -11,11 +11,12 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.NotImplementedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -42,11 +43,14 @@ public class OmniQueueService {
         var omniType = getOmniTypeIfExists(dataType);
         var omni = omniRepository.findFirstByOmniTypeAndArchivedOrderByIdAsc(omniType, false)
                 .orElseThrow(ExceptionSupplier.emptyQueueException(dataType));
+        archiveOmni(omni);
+        return omni.getData();
+    }
 
+    private void archiveOmni(Omni omni) {
         omni.setUpdated(LocalDateTime.now());
         omni.setArchived(true);
         omniRepository.save(omni);
-        return omni.getData();
     }
 
     public void purgeAllByDataType(String dataType) {
@@ -55,32 +59,21 @@ public class OmniQueueService {
         omniRepository.deleteAllByOmniTypeId(omniType.getId());
     }
 
+    @Transactional(readOnly = true)
     public OmniItemCountDTO countOmniByDataType(String dataType) {
         log.info("Count omni by [{}] data type", dataType);
         var omniType = getOmniTypeIfExists(dataType);
-        var omniCount = new OmniItemCountDTO();
-        omniCount.setDataType(dataType);
-        omniCount.setItemCount(omniRepository.countByOmniTypeAndArchived(omniType, false));
-        Optional.ofNullable(this.omniTypeRepository.findByDataType(dataType)
-                .orElse(OmniType.builder().dataType(dataType).meta("N/A").build())
-                .getMeta()).ifPresent(omniCount::setMeta);
-        return omniCount;
+        var count = omniRepository.countByOmniTypeAndArchived(omniType, false);
+        return EntityMapper.toOmniItemCountDTO(omniType, count);
     }
 
+    @Transactional(readOnly = true)
     public List<OmniItemCountDTO> countAllOmni() {
         log.info("Count all omni");
-        List<OmniItemCountDTO> itemsCounts = new ArrayList<>();
-        var dataTypes = this.omniTypeRepository.findDistinctDataTypes();
-
-        for (String dataType : dataTypes) {
-            OmniItemCountDTO omniCount = new OmniItemCountDTO();
-            omniCount.setDataType(dataType);
-            omniCount.setItemCount(this.omniRepository.countByOmniTypeAndArchived(getOmniTypeIfExists(dataType), false));
-            Optional.ofNullable(this.omniTypeRepository.findByDataType(dataType)
-                    .orElse(OmniType.builder().dataType(dataType).meta("N/A").build()).getMeta()).ifPresent(omniCount::setMeta);
-            itemsCounts.add(omniCount);
-        }
-        return itemsCounts;
+        return omniTypeRepository.findAllAndCount().stream()
+                .map(EntityMapper::toOmniItemCountDTO)
+                .sorted(Comparator.comparing(OmniItemCountDTO::getDataType))
+                .collect(Collectors.toList());
     }
 
     public void deleteOmniById(Long id) {
@@ -88,6 +81,7 @@ public class OmniQueueService {
         omniRepository.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
     public List<OmniDTO> searchOmnis(OmniSearchDTO searchDTO) {
         log.info("Searching omnis");
         var omnis = searchOmni(searchDTO);
@@ -113,19 +107,12 @@ public class OmniQueueService {
         }
     }
 
+    @Transactional
     public void archiveOmni(ArchiveOmniDTO archiveOmniDTO) {
-        log.info("Archive omni by [{}] data type and created before [{}]", archiveOmniDTO.getDataType(), archiveOmniDTO.getCreatedBefore());
         var omniType = getOmniTypeIfExists(archiveOmniDTO.getDataType());
-        var omnis = omniRepository.findAllByOmniTypeAndCreatedBefore(omniType, archiveOmniDTO.getCreatedBefore());
-        if (!omnis.isEmpty()) {
-            omnis.forEach(omni -> {
-                omni.setUpdated(LocalDateTime.now());
-                omni.setArchived(true);
-                omniRepository.save(omni);
-            });
-        } else {
-            log.info("Return empty queue with data type [{}] and created date before [{}]", archiveOmniDTO.getDataType(), archiveOmniDTO.getCreatedBefore());
-        }
+        var archived = omniRepository
+                .archiveByDataTypeAndCreatedBefore(omniType.getId(), archiveOmniDTO.getCreatedBefore());
+        log.info("Archived data type items: [{}] - [{}]", archiveOmniDTO.getDataType(), archived);
     }
 
     private OmniType getOmniTypeIfExists(String dataType) {

@@ -9,6 +9,7 @@ import com.auto1.testdatastorage.utils.ExceptionSupplier;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -64,6 +65,7 @@ public class OmniTypeService {
         log.trace("Successfully deleted omni data type [{}]", id);
     }
 
+    @Transactional(readOnly = true)
     public List<OmniTypeDTO> getAllOmniTypes() {
         log.info("Get all omni types");
         return omniTypeRepository.findAllAndCount().stream()
