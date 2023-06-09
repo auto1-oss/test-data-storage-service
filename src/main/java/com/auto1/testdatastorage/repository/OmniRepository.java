@@ -40,7 +40,8 @@ public interface OmniRepository
 
     @Modifying
     @Query(
-            value = "UPDATE test_data_storage.omni_queue SET archived = true " +
+            value = "UPDATE test_data_storage.omni_queue " +
+                    "SET archived = true, updated = NOW() " +
                     "WHERE omni_type_id = :dataTypeId AND created < :before",
             nativeQuery = true
     )
