@@ -38,6 +38,7 @@ public class OmniQueueService {
         omniRepository.save(omni);
     }
 
+    @Transactional
     public String getOmni(String dataType) {
         log.info("Get omni [{}] data type", dataType);
         var omniType = getOmniTypeIfExists(dataType);
