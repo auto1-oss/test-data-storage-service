@@ -4,6 +4,7 @@ import com.auto1.testdatastorage.domain.Omni;
 import com.auto1.testdatastorage.domain.OmniType;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.LockModeType;
@@ -15,6 +16,7 @@ import java.util.Optional;
 public interface OmniRepository
         extends JpaRepository<Omni, Long>, JpaSpecificationExecutor<Omni> {
 
+    @Transactional
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     Optional<Omni> findFirstByOmniTypeAndArchivedOrderByIdAsc(OmniType omniType, boolean archived);
 
