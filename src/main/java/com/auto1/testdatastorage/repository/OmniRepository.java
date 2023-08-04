@@ -15,6 +15,7 @@ import java.util.Optional;
 public interface OmniRepository
         extends JpaRepository<Omni, Long>, JpaSpecificationExecutor<Omni> {
 
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     Optional<Omni> findFirstByOmniTypeAndArchivedOrderByIdAsc(OmniType omniType, boolean archived);
 
     Long countByOmniTypeAndArchived(OmniType omniType, boolean archived);
