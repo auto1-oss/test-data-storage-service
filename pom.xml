@@ -94,6 +94,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>license-maven-plugin</artifactId>
+            <version>2.2.0</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
@@ -121,6 +127,28 @@
                         </exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>2.2.0</version> <!-- Use the latest version -->
+                <configuration>
+                    <includes>
+                        <include>**/*.java</include> <!-- Filter Java source files, adjust as needed -->
+                    </includes>
+                    <organizationName>Auto1 Group</organizationName>
+                    <inceptionYear>2023</inceptionYear>
+                    <licenseName>apache_v2</licenseName>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>update-file-header</id>
+                        <goals>
+                            <goal>update-file-header</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
