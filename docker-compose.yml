@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 
 services:
   db:
@@ -9,13 +9,11 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - ./scripts/main:/docker-entrypoint-initdb.d
-      - ./.postgres/test_data_storage:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_USER=test_data_storage
-      - POSTGRES_PASSWORD=admin
-      - POSTGRES_MULTIPLE_DATABASES=test_data_storage
-      - PGDATA=/var/lib/postgresql/data
+      POSTGRES_USER: test_data_storage
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: test_data_storage
     logging:
       options:
         max-file: "5"
@@ -23,24 +21,37 @@ services:
 
 
   test-data-service:
-    image: test-data-storage-service:latest
-    build:
-      context: .
-    container_name: test-data-service
+    image: auto1/test-data-storage-service:latest
+    container_name: test-data-service-api
     expose:
-      - 8080
+      - 8085
     ports:
-      - 8080:8080
+      - 8085:8085
     depends_on:
       - db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/test_data_storage
-      - SPRING_DATASOURCE_USERNAME=test_data_storage
-      - SPRING_DATASOURCE_PASSWORD=admin
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/test_data_storage
+      SPRING_DATASOURCE_USERNAME: test_data_storage
+      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      BASIC_USERNAME: custom_user
+      BASIC_PASSWORD: custom_password
     logging:
       options:
         max-file: "5"
         max-size: "10m"
 
+  ui:
+    image: auto1/test-data-storage-ui:latest
+    container_name: test-data-service-ui
+    ports:
+      - "3000:3000"
+    environment:
+      REACT_APP_BASE_URL_API: http://localhost:8085
+      REACT_APP_BASIC_AUTH_USER: custom_user
+      REACT_APP_BASIC_AUTH_PASSWORD: custom_password
+    depends_on:
+      - test-data-service
 
+volumes:
+  db_data:
