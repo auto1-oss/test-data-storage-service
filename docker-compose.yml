@@ -31,11 +31,11 @@ services:
       - db
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/test_data_storage
-      SPRING_DATASOURCE_USERNAME: test_data_storage
-      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_DATASOURCE_USERNAME: db_user
+      SPRING_DATASOURCE_PASSWORD: db_password
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
-      BASIC_USERNAME: custom_user
-      BASIC_PASSWORD: custom_password
+      BASIC_USERNAME: basic_auth_user
+      BASIC_PASSWORD: basic_auth_password
     logging:
       options:
         max-file: "5"
@@ -48,8 +48,8 @@ services:
       - "3000:3000"
     environment:
       REACT_APP_BASE_URL_API: http://localhost:8085
-      REACT_APP_BASIC_AUTH_USER: custom_user
-      REACT_APP_BASIC_AUTH_PASSWORD: custom_password
+      REACT_APP_BASIC_AUTH_USER: basic_auth_user
+      REACT_APP_BASIC_AUTH_PASSWORD: basic_auth_password
     depends_on:
       - test-data-service
 
