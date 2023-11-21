@@ -46,19 +46,15 @@ public interface OmniRepository
     void deleteAllByOmniTypeId(Long omniTypeId);
 
     @Transactional
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
     List<Omni> findAllByArchivedAndUpdatedBefore(boolean archived, LocalDateTime before);
 
     @Transactional
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
     List<Omni> findAllByOmniTypeAndArchivedAndCreatedBefore(OmniType omniType, boolean archived, LocalDateTime before);
 
     @Transactional
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
     List<Omni> findAllByOmniTypeAndArchivedAndUpdatedBefore(OmniType omniType, boolean archived, LocalDateTime before);
 
     @Transactional
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
     List<Omni> findAllByOmniTypeAndCreatedBefore(OmniType omniType, LocalDateTime before);
 
     @Modifying
