@@ -62,8 +62,19 @@ public class OmniQueueService {
     public String getOmni(String dataType) {
         log.info("Get omni [{}] data type", dataType);
         var omniType = getOmniTypeIfExists(dataType);
-        var omni = omniRepository.findFirstByOmniTypeAndArchivedOrderByIdAsc(omniType, false)
+        var omni = omniRepository.findFirstDataByOmniTypeIdAndArchivedOrderByIdAsc(omniType.getId())
                 .orElseThrow(ExceptionSupplier.emptyQueueException(dataType));
+        omniRepository.archiveById(omni.getId());
+        return omni.getData();
+    }
+
+    @Transactional
+    public String getOmni_old(String dataType) {
+        log.info("Get omni [{}] data type", dataType);
+        //var omniType = getOmniTypeIfExists(dataType);
+        var omni = omniRepository.findFirstByOmniTypeAndArchivedOrderByIdAsc(OmniType.builder().id(1L).build(), false)
+                .orElseThrow(ExceptionSupplier.emptyQueueException(dataType));
+        var omniType2 = omni.getOmniType();
         archiveOmni(omni);
         return omni.getData();
     }

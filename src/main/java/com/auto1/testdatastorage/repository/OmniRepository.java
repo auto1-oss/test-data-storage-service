@@ -40,6 +40,14 @@ public interface OmniRepository
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     Optional<Omni> findFirstByOmniTypeAndArchivedOrderByIdAsc(OmniType omniType, boolean archived);
 
+    @Transactional
+    @Query(
+            value = "SELECT o.id, o.data FROM test_data_storage.omni_queue o " +
+                    "WHERE o.omni_type_id = :omniTypeId AND o.archived = FALSE " +
+                    "ORDER BY o.id ASC LIMIT 1 FOR UPDATE",
+            nativeQuery = true)
+    Optional<Omni> findFirstDataByOmniTypeIdAndArchivedOrderByIdAsc(Long omniTypeId);
+
     Long countByOmniTypeAndArchived(OmniType omniType, boolean archived);
 
     @Transactional
@@ -65,4 +73,13 @@ public interface OmniRepository
             nativeQuery = true
     )
     int archiveByDataTypeAndCreatedBefore(Long dataTypeId, LocalDateTime before);
+
+    @Modifying
+    @Query(
+            value = "UPDATE test_data_storage.omni_queue o " +
+                    "SET o.archived = true, o.updated = NOW() " +
+                    "WHERE o.id = :id",
+            nativeQuery = true
+    )
+    int archiveById(Long id);
 }

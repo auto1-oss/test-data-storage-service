@@ -48,6 +48,13 @@ public interface OmniQueueApi {
     )
     String getOmni(@PathVariable("data-type") String dataType);
 
+    @ApiOperation("Get omni")
+    @GetMapping(
+            value = "/queue/omni/old/{data-type}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    String getOmni_old(@PathVariable("data-type") String dataType);
+
     @ApiOperation("Purge all data by data type")
     @PostMapping(
             value = "/queue/omni/{data-type}/purge",
