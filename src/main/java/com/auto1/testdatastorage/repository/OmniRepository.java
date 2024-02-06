@@ -46,7 +46,7 @@ public interface OmniRepository
                     "WHERE o.omni_type_id = :omniTypeId AND o.archived = FALSE " +
                     "ORDER BY o.id ASC LIMIT 1 FOR UPDATE",
             nativeQuery = true)
-    Optional<Omni> findFirstDataByOmniTypeIdAndArchivedOrderByIdAsc(Long omniTypeId);
+    Optional<Omni.OmniDataView> findFirstDataByOmniTypeIdAndArchivedOrderByIdAsc(Long omniTypeId);
 
     Long countByOmniTypeAndArchived(OmniType omniType, boolean archived);
 
