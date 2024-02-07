@@ -53,6 +53,12 @@ public class OmniQueueController implements OmniQueueApi {
 
     @Override
     @ResponseStatus(OK)
+    public String getOmni_old(String dataType) {
+        return omniQueueService.getOmni_old(dataType);
+    }
+
+    @Override
+    @ResponseStatus(OK)
     public void purgeAllByDataType(String dataType) {
         omniQueueService.purgeAllByDataType(dataType);
     }

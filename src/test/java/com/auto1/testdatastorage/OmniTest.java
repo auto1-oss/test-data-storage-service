@@ -126,6 +126,32 @@ public class OmniTest {
     }
 
     @Test
+    public void getOmni_old() {
+        var omni1 = TestUtils.buildOmniItem(omniType1, "Omni 2", false);
+        var omni2 = TestUtils.buildOmniItem(omniType2, "Omni 3", false);
+        var omni3 = TestUtils.buildOmniItem(omniType1, "Omni 4", false);
+
+        this.omniRepository.saveAll(Arrays.asList(omni1, omni2, omni3));
+
+        //@formatter:off
+        given()
+                .baseUri(baseUrl)
+                .basePath(String.format("/queue/omni/old/%s", dataType1))
+                .auth().basic(username, password)
+                .when()
+                .get()
+                .prettyPeek()
+                .then()
+                .statusCode(200);
+        //@formatter:on
+
+        assertThat(this.omniRepository.count(), is(3L));
+        assertThat(this.omniRepository.countByOmniTypeAndArchived(omniType1, true), is(1L));
+        assertThat(this.omniRepository.countByOmniTypeAndArchived(omniType1, false), is(1L));
+        assertThat(this.omniRepository.countByOmniTypeAndArchived(omniType2, false), is(1L));
+    }
+
+    @Test
     public void deleteOmniByDataType() {
         var omni1 = TestUtils.buildOmniItem(omniType1, "Omni 2", false);
         var omni2 = TestUtils.buildOmniItem(omniType2, "Omni 3", false);

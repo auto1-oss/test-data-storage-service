@@ -50,4 +50,9 @@ public class Omni {
     private Boolean archived;
     private LocalDateTime created;
     private LocalDateTime updated;
+
+    public interface OmniDataView {
+        Long getId();
+        String getData();
+    }
 }
