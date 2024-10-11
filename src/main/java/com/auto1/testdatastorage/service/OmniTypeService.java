@@ -88,7 +88,7 @@ public class OmniTypeService {
 
     @Transactional(readOnly = true)
     public List<OmniTypeDTO> getAllOmniTypes() {
-        log.info("Get all omni types");
+        log.info("Get all omni types sorted");
         return omniTypeRepository.findAllAndCount().stream()
                 .map(EntityMapper::toOmniTypeDTO)
                 .sorted(Comparator.comparing(OmniTypeDTO::getDataType))

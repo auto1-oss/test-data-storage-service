@@ -85,5 +85,4 @@ public class EntityMapper {
                 .sorted(Comparator.comparing(OmniTypeDTO::getDataType))
                 .collect(Collectors.toList());
     }
-
 }
