@@ -230,5 +230,41 @@ public class OmniTypeTest {
 
         assertThat(result.size(), is(2));
     }
+    @Test
+    public void getAllOmniTypesSorted() {
+        var dataType1 = "RETAIL_AD_DE";
+        var dataType2 = "RETAIL_AD_ALL_DETAILS_DE";
+        var dataType3 = "EVA_FINISHED_IOS";
+        var omniType1 = TestUtils.buildOmniTypeItem(dataType1, "RETAIL_AD_DE");
+        var omniType2 = TestUtils.buildOmniTypeItem(dataType2, "RETAIL_AD_ALL_DETAILS_DE");
+        var omniType3 = TestUtils.buildOmniTypeItem(dataType3, "EVA_FINISHED_IOS");
+
+        this.omniTypeRepository.saveAll(Arrays.asList(omniType1, omniType2, omniType3));
+
+        assertThat(this.omniTypeRepository.count(), is(3L));
+
+        //@formatter:off
+        var result =
+                given()
+                        .baseUri(baseUrl)
+                        .basePath("/queue/omni-types")
+                        .auth().basic(username, password)
+                        .when()
+                        .get()
+                        .prettyPeek()
+                        .then()
+                        .statusCode(200)
+                        .extract()
+                        .body()
+                        .jsonPath()
+                        .getList("", OmniTypeDTO.class);
+        //@formatter:on
+
+        assertThat(result.size(), is(3));
+        assertThat(result.get(0).getDataType(), is ("EVA_FINISHED_IOS"));
+        assertThat(result.get(1).getDataType(), is ("RETAIL_AD_ALL_DETAILS_DE"));
+        assertThat(result.get(2).getDataType(), is ("RETAIL_AD_DE"));
+    }
+
 
 }

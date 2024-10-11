@@ -27,6 +27,7 @@ import com.auto1.testdatastorage.dto.OmniItemCountDTO;
 import com.auto1.testdatastorage.dto.OmniTypeDTO;
 import lombok.experimental.UtilityClass;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -80,7 +81,9 @@ public class EntityMapper {
     }
 
     public static List<OmniTypeDTO> toOmniTypeDTO(final List<OmniType> omniTypes) {
-        return omniTypes.parallelStream().map(EntityMapper::toOmniTypeDTO).collect(Collectors.toList());
+        return omniTypes.parallelStream().map(EntityMapper::toOmniTypeDTO)
+                .sorted(Comparator.comparing(OmniTypeDTO::getDataType))
+                .collect(Collectors.toList());
     }
 
 }
