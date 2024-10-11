@@ -32,6 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -90,6 +91,7 @@ public class OmniTypeService {
         log.info("Get all omni types");
         return omniTypeRepository.findAllAndCount().stream()
                 .map(EntityMapper::toOmniTypeDTO)
+                .sorted(Comparator.comparing(OmniTypeDTO::getDataType))
                 .collect(Collectors.toUnmodifiableList());
     }
 }
