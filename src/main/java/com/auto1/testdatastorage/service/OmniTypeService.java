@@ -79,7 +79,7 @@ public class OmniTypeService {
         Optional.of(id)
                 .filter(omniTypeRepository::existsById)
                 .ifPresent(typeId -> {
-                    omniRepository.deleteAllByOmniTypeId(typeId);
+                    omniRepository.deleteAllByOmniTypeIdAndArchived(typeId, false);
                     omniTypeRepository.deleteById(typeId);
                 });
         log.trace("Successfully deleted omni data type [{}]", id);

@@ -43,7 +43,7 @@ public interface OmniRepository
     Long countByOmniTypeAndArchived(OmniType omniType, boolean archived);
 
     @Transactional
-    void deleteAllByOmniTypeId(Long omniTypeId);
+    void deleteAllByOmniTypeIdAndArchived(Long omniTypeId, boolean archived);
 
     @Transactional
     List<Omni> findAllByArchivedAndUpdatedBefore(boolean archived, LocalDateTime before);
