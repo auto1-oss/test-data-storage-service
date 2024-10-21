@@ -77,7 +77,7 @@ public class OmniQueueService {
     public void purgeAllByDataType(String dataType) {
         log.info("Purge all data by data type [{}]", dataType);
         var omniType = getOmniTypeIfExists(dataType);
-        omniRepository.deleteAllByOmniTypeId(omniType.getId());
+        omniRepository.deleteAllByOmniTypeIdAndArchived(omniType.getId(), false);
     }
 
     @Transactional(readOnly = true)
